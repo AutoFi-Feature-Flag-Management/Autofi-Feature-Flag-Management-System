@@ -1,0 +1,23 @@
+.toggle-border{
+    width: 80px;
+    height: 20px;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 40%;
+}
+
+.toggle-circle{
+    width: 20%;
+    height: 0.98rem;
+    border-radius: 50%;
+    background-color: white;
+}
+.inputslider{
+    -webkit-appearance: none;
+    outline: none;
+    width: 80px;
+    height: 20px;
+    background-color: red;
+}
