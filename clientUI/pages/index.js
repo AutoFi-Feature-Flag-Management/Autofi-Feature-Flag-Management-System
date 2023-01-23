@@ -4,7 +4,7 @@ function HomePage() {
   return (
     <React.Fragment>
       <h1>The home Page</h1>
-      <Toggle></Toggle>
+      <Toggle state={true}></Toggle>
     </React.Fragment>
   );
 }
