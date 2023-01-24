@@ -5,10 +5,10 @@ function Toggle(props) {
   const [toggleState, setToggleState] = useState(props.state);
   const toggleStateHandler = () => {
     // props.onClick(!props.state);
-    // setToggleState((prevState) => {
-    //   console.log(!prevState);
-    //   return !prevState;
-    // });
+    setToggleState((prevState) => {
+      console.log(!prevState);
+      return !prevState;
+    });
   };
   return (
     <React.Fragment>
