@@ -19,8 +19,8 @@ export default HomePage;
 
 export async function getStaticProps() {
   const response = await handler({
-    url: "https://swapi.dev/api/people/1",
-    method: "GET",
+    url: "http://localhost:3001/1/false",
+    method: "POST",
   });
   if (response.status) {
     return {
