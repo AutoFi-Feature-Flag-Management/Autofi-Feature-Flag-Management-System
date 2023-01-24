@@ -10,7 +10,7 @@ const Button = (props) => {
 
   return (
     <Card className="button">
-      <button onClick={clickHandler}>{props.title}</button>
+      <button onClick={clickHandler}>{props.children}</button>
     </Card>
   );
 };
