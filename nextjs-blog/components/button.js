@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
-import Card from "./styles/Card";
+import Card from "./Card";
 
 const Button = (props) => {
-  const clickHandler = () => {};
+  const clickHandler = (e) => {
+    e.preventDefault();
+    props.onClick();
+  };
 
   return (
     <Card className="button">
