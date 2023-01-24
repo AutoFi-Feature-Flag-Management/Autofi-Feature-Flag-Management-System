@@ -1,5 +1,3 @@
-import { JSON } from "mysql/lib/protocol/constants/types";
-
 async function handler(req) {
   try {
     const response = await fetch(req.url, {
