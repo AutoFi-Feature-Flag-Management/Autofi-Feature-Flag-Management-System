@@ -1,23 +1,27 @@
-import { calculateSizeAdjustValues } from "next/dist/server/font-utils";
-import React from "react";
+import React, { useState } from "react";
 import classes from "../styles/toggle.module.css";
-function Toggle() {
-  const toggleStateChanger = () => {};
+
+function Toggle(props) {
+  const [toggleState, setToggleState] = useState(props.state);
+  const toggleStateHandler = () => {
+    // props.onClick(!props.state);
+    // setToggleState((prevState) => {
+    //   console.log(!prevState);
+    //   return !prevState;
+    // });
+  };
   return (
     <React.Fragment>
-      <div>hello</div>
+      <label className={classes["toggle-label"]}>
+        <input
+          className={classes["toggle-input"]}
+          type="checkbox"
+          defaultChecked={toggleState}
+          onClick={toggleStateHandler}
+        ></input>
+        <span className={classes["toggle-span"]} />
+      </label>
     </React.Fragment>
   );
 }
 export default Toggle;
-//   {/* <div
-//     className={classes["toggle-border"]}
-//     onToggle={toggleStateChanger}
-//   ></div> */}
-{
-  /* <label className={classes["toggle-switch"]}>
-        <input className={classes[""]} type="checkbox">
-          <span className={classes["toggle-slider"]}></span>
-        </input>
-      </label> */
-}
