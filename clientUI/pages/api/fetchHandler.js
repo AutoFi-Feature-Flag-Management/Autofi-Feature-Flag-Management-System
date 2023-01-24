@@ -1,9 +1,10 @@
 async function handler(req) {
   try {
     const response = await fetch(req.url, {
-      method: req.method ? req.method : "",
+      method: req.method ? req.method : "GET",
       body: req.body ? JSON.stringify(req.body) : null,
-      headers: req.headers ? req.headers : {},
+      headers:
+        req.method === "POST" ? { "Content-Type": "application/json" } : {},
     });
     if (!response.ok) {
       throw new Error("Unsuccesful Execution!");
