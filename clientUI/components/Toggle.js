@@ -4,10 +4,11 @@ import classes from "../styles/toggle.module.css";
 function Toggle(props) {
   const [toggleState, setToggleState] = useState(props.state);
   const toggleStateHandler = () => {
-    setToggleState((prevState) => {
-      console.log(!prevState);
-      return !prevState;
-    });
+    // props.onClick(!props.state);
+    // setToggleState((prevState) => {
+    //   console.log(!prevState);
+    //   return !prevState;
+    // });
   };
   return (
     <React.Fragment>
