@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Toggle from "../components/Toggle";
-import handler from "../pages/api/feature-item";
+import handler from "./api/fetchHandler";
 function HomePage(props) {
   let featureData = props.data.status && props.data.data;
   console.log(featureData);
