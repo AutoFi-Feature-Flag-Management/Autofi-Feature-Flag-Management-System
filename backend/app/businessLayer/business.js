@@ -1,7 +1,8 @@
 const launchDarklyController = require("../featureFlagController/launchDarklyController");
 
-const getFeatureFlags = () => {
-  return launchDarklyController.getFeatureFlags();
+const getFeatureFlags = async () => {
+  const data = await launchDarklyController.getFeatureFlags();
+  return data;
 };
 
 const changeFlag = (parameters) => {

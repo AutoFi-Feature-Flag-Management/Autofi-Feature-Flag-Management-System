@@ -1,31 +1,24 @@
-const http = require("http");
+const fetch = require("node-fetch");
 
-const ff = [
-  {
-    id: 1,
-    status: false,
-  },
-  {
-    id: 2,
-    status: false,
-  },
-  {
-    id: 3,
-    status: true,
-  },
-  {
-    id: 4,
-    status: false,
-  },
-  {
-    id: 5,
-    status: true,
-  },
-];
+async function getFeatureFlags() {
+  const projectKey = "default";
 
-const getFeatureFlags = () => {
-  return ff;
-};
+  const resp = await fetch(
+    `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "api-5380598a-207a-454b-956c-f862ddebc08a",
+      },
+    }
+  );
+
+  const data = await resp.text();
+  console.log(data);
+  //need to handle server errors (server.status == 400) (400 etc.)
+  console.log(resp.status);
+  return data;
+}
 
 const changeFlag = (parameters) => {
   //http.patch("launchdarklypath")
