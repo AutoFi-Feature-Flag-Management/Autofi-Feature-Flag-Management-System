@@ -1,7 +1,7 @@
 const business = require("../businessLayer/business");
 
-const getFeatureFlags = (req, res) => {
-  res.send(business.getFeatureFlags());
+const getFeatureFlags = async (req, res) => {
+  res.send(await business.getFeatureFlags());
 };
 
 const changeFlag = (req, res, next) => {
