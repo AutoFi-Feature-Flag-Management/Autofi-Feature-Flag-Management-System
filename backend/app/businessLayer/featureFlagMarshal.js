@@ -9,6 +9,7 @@ const launchDarklyMarshaller = (json_file) => {
   launch_darkly_json.items.forEach((item) => {
     feature_flags.push(
       new FeatureFlag(
+        item.key,
         item.name,
         item.environments.production.on,
         new Date(item.environments.production.lastModified)

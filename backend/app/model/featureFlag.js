@@ -1,5 +1,6 @@
 module.exports = class FeatureFlag {
-  constructor(name, value, lastUpdatedDate) {
+  constructor(key, name, value, lastUpdatedDate) {
+    this.key = key;
     this.name = name;
     this.value = value;
     this.lastUpdatedDate = lastUpdatedDate;
