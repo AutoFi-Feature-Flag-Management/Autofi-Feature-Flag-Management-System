@@ -14,7 +14,7 @@ async function getFeatureFlags() {
   );
 
   const data = await resp.text();
-  console.log(data);
+  // console.log(data);
   //need to handle server errors (server.status == 400) (400 etc.)
   console.log(resp.status);
   return data;
