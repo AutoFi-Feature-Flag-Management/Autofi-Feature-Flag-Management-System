@@ -6,6 +6,7 @@
  * @property {string} name - Name of the feature flag
  * @property {boolean} value - Value of the feature flag
  * @property {Date} lastUpdatedDate - Date when the feature flag was last updated
+ * @property {string} description - Description of the feature flag
  */
 module.exports = class FeatureFlag {
   /**
@@ -16,6 +17,7 @@ module.exports = class FeatureFlag {
    * @param {string} name - Name of the feature flag
    * @param {boolean} value - Value of the feature flag
    * @param {Date} lastUpdatedDate - Date when the feature flag was last updated
+   * @property {string} description - Description of the feature flag
    */
   constructor(key, name, value, lastUpdatedDate, description) {
     this.key = key;
