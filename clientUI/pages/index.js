@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import Toggle from "../components/Toggle";
+import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
+import FeatureFlagPage from "./FeatureFlagPage";
+
 function HomePage(props) {
   let featureData = props.data.status && props.data.data;
   console.log(featureData);
@@ -11,7 +13,8 @@ function HomePage(props) {
         <Link href="feature-item/test"> This is a test link</Link>
       </p>
       <Toggle state={true}></Toggle>
-      {/* <p>{props.data.name}</p> */}
+      <FeatureFlagPage />
+      
     </React.Fragment>
   );
 }

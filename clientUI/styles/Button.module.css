@@ -1,0 +1,16 @@
+.button {
+  padding: 0.5rem 1rem;
+  font-weight: 300;
+  background: #2f92e3;
+  border-color: #2f92e3;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 150px;
+}
+
+.button:hover,
+.button:active {
+  background: #93c3e8;
+  border-color: #93c3e8;
+}
