@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import classes from "../styles/toggle.module.css";
+import classes from "../../styles/toggle.module.css";
 
 function Toggle(props) {
   const [toggleState, setToggleState] = useState(props.state);

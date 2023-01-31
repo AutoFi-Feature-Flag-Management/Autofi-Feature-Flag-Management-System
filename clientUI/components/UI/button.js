@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import classes from '../../styles/Button.module.css';
 
 import Card from "./Card";
 
@@ -9,8 +10,8 @@ const Button = (props) => {
   };
 
   return (
-    <Card className="button">
-      <button onClick={clickHandler}>{props.children}</button>
+    <Card>
+      <button onClick={clickHandler}  className={classes.button}>{props.children}</button>
     </Card>
   );
 };
