@@ -1,5 +1,17 @@
+/**
+ * This module exports a single function to marshal feature flag data from LaunchDarkly.
+ *
+ * @module featureFlagMarshal
+ */
+
 const FeatureFlag = require("../model/featureFlag");
 
+/**
+ * Marshals feature flag data from a LaunchDarkly JSON file.
+ *
+ * @param {string} json_file - The LaunchDarkly JSON file.
+ * @returns {Array} An array of marshalled feature flags.
+ */
 const launchDarklyMarshaller = (json_file) => {
   //parsifying the launch darkly json_file into an object
   const launch_darkly_json = JSON.parse(json_file);
