@@ -20,7 +20,7 @@ const getFeatureFlags = async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(400);
-    res.send(e.message);
+    res.send("Feature Flag API Error: " + e.message);
   }
 };
 
