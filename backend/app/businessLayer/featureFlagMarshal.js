@@ -4,7 +4,7 @@
  * @module featureFlagMarshal
  */
 
-const FeatureFlag = require("../model/featureFlag");
+const FeatureFlag = require("../../../shared/model/featureFlag");
 
 /**
  * Marshals feature flag data from a LaunchDarkly JSON file.

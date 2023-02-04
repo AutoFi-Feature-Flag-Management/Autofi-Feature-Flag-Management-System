@@ -14,7 +14,14 @@ const business = require("../businessLayer/business");
  * @returns {object} - HTTP response object
  */
 const getFeatureFlags = async (req, res) => {
-  res.send(await business.getFeatureFlags());
+  // res.status(400);
+  try {
+    res.send(await business.getFeatureFlags());
+  } catch (e) {
+    console.log(e.message);
+    res.status(400);
+    res.send(e.message);
+  }
 };
 
 /**
