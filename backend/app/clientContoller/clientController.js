@@ -1,3 +1,5 @@
+const business = require("../businessLayer/business");
+
 /**
  * @module clientController
  * @description - Contains the implementations of the client-side requests.
@@ -12,7 +14,14 @@
  * @returns {object} - HTTP response object
  */
 const getFeatureFlags = async (req, res) => {
-  res.send(await business.getFeatureFlags());
+  // res.status(400);
+  try {
+    res.send(await business.getFeatureFlags());
+  } catch (e) {
+    console.log(e.message);
+    res.status(400);
+    res.send("Feature Flag API Error: " + e.message);
+  }
 };
 
 /**

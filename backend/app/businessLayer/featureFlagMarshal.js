@@ -4,7 +4,7 @@
  * @module featureFlagMarshal
  */
 
-const FeatureFlag = require("../model/featureFlag");
+const FeatureFlag = require("../../../shared/model/featureFlag");
 
 /**
  * Marshals feature flag data from a LaunchDarkly JSON file.
@@ -24,7 +24,8 @@ const launchDarklyMarshaller = (json_file) => {
         item.key,
         item.name,
         item.environments.production.on,
-        new Date(item.environments.production.lastModified)
+        new Date(item.environments.production.lastModified),
+        item.description
       )
     );
   });
