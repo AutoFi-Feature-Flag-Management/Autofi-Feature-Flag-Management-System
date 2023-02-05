@@ -13,7 +13,6 @@ const featureFlag = {
   lastUpdatedDate: new Date("2022-03-25"),
 };
 
-
 export default function FeatureFlagPage() {
   const [modalType, setModalType] = useState("");
 
