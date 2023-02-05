@@ -8,9 +8,9 @@ export default function Modal(props) {
         <h1 className={classes.header}>{props.title}</h1>
         <h2 className={classes.message}>{props.message}</h2>
         <div className={classes.actions}>
-          <Button onClick={props.onCancel}>{props.cancelButton}</Button>
+          <Button onClick={props.onCancel}>Return to Feature Flag</Button>
 
-          <Button onClick={props.onConfirm}>{props.confirmButton}</Button>
+          <Button onClick={props.onConfirm}>Return to Summary</Button>
         </div>
       </div>
       <div className={classes.background} onClick={props.onClick}></div>
