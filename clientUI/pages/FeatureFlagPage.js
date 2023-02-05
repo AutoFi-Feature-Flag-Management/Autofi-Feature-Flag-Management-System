@@ -13,8 +13,6 @@ const featureFlag = {
   lastUpdatedDate: new Date("2022-03-25"),
 };
 
-const cancelButton = "Return to Feature Flag";
-const confirmButton = "Return to Summary";
 
 export default function FeatureFlagPage() {
   const [modalType, setModalType] = useState("");
@@ -42,8 +40,6 @@ export default function FeatureFlagPage() {
         <Modal
           title="Changes Saved!"
           message="Feature flag status has been updated successfully."
-          confirmButton={confirmButton}
-          cancelButton={cancelButton}
           onCancel={onCloseModal}
           onConfirm={onReturnHome}
         />
@@ -52,8 +48,6 @@ export default function FeatureFlagPage() {
         <Modal
           title="Are you Sure?"
           message="If you return to home any status changes will be lost."
-          confirmButton={confirmButton}
-          cancelButton={cancelButton}
           onCancel={onCloseModal}
           onConfirm={onReturnHome}
         />
