@@ -110,7 +110,6 @@ function HomePage(props) {
         <Link href="feature-item/test"> This is a test link</Link>
       </p>
       <Toggle state={true}></Toggle>
-      <FeatureFlagPage />
 
       <Table featureData={array}></Table>
     </React.Fragment>
