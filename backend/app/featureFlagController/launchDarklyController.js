@@ -1,3 +1,5 @@
+const fetch = require("node-fetch");
+
 /**
  * @async
  * Makes a GET request to LaunchDarkly API and returns the feature flags.
@@ -22,16 +24,45 @@ async function getFeatureFlags(projectKey = "default") {
 }
 
 /**
+ * @async
  * Updates a feature flag by making a PATCH request to LaunchDarkly API.
  * @function
  * @param {Object} parameters - The parameters for updating the feature flag.
- * @param {string} parameters.id - The id of the feature flag.
- * @param {boolean} parameters.status - The new status of the feature flag.
+ * @param {string} parameters.key - The key of the feature flag.
+ * @param {boolean} parameters.value - The new value of the feature flag.
  */
-const changeFlag = (parameters) => {
-  console.log(parameters.id);
-  console.log(parameters.status);
-};
+async function changeFlag(parameters) {
+  const projectKey = "default";
+  const featureFlagKey = parameters.key;
+  let featureFlagValue = false;
+  if (parameters.value == "true") {
+    featureFlagValue = true;
+  }
+
+  const resp = await fetch(
+    `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${featureFlagKey}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+      },
+      body: JSON.stringify({
+        patch: [
+          {
+            op: "replace",
+            path: "/environments/production/on",
+            value: featureFlagValue,
+          },
+        ],
+      }),
+    }
+  );
+
+  const data = await resp.json();
+  console.log(resp.status);
+  return data;
+}
 
 module.exports = {
   getFeatureFlags,

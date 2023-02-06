@@ -32,9 +32,14 @@ const getFeatureFlags = async (req, res) => {
  * @description - Calls the changeFlag function of the business layer and sends the request parameters as a response.
  * @returns {object} - HTTP response object
  */
-const changeFlag = (req, res, next) => {
-  business.changeFlag(req.params);
-  res.send(req.params);
+const changeFlag = async (req, res, next) => {
+  try {
+    res.send(await business.changeFlag(req.params));
+  } catch (e) {
+    console.log(e.message);
+    res.status(400);
+    res.send("Feature Flag API Error: " + e.message);
+  }
 };
 
 module.exports = {

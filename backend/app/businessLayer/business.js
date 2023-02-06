@@ -23,8 +23,9 @@ const getFeatureFlags = async () => {
  *
  * @param {Object} parameters - The parameters for the feature flag change.
  */
-const changeFlag = (parameters) => {
-  launchDarklyController.changeFlag(parameters);
+const changeFlag = async (parameters) => {
+  const data = await launchDarklyController.changeFlag(parameters);
+  return data;
 };
 
 module.exports = {
