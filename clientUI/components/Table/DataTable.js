@@ -13,7 +13,7 @@ import Button from "../UI/button";
  * @returns {React.Element} A React component that displays a data grid.
  */
 
-export default function InitialFilters(props) {
+export default function DataTable(props) {
   // Define an array to store the rows data
   let rows = [];
 
