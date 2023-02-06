@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import classes from "../../styles/DataTable.module.css";
 import Button from "../UI/button";
-
+import Link from "next/link";
 /*
  * @file InitialFilters.js
  * @author [Isaiah]
@@ -16,19 +16,23 @@ import Button from "../UI/button";
 export default function DataTable(props) {
   // Define an array to store the rows data
   let rows = [];
-
+  let id = 0;
   // Use the useMemo hook to transform the props.data into the required format
   useMemo(() => {
     props.data.map((feature) => {
       rows.push({
-        id: +feature.key, // Convert the key to a number
+        id: +id, // Convert the key to a number
         name: feature.name,
         date: feature.lastUpdatedDate,
-        value: feature.value,
+        description: feature.description,
+        value: feature.value ? "On" : "Off",
         buttonVal: +feature.key, // Convert the key to a number
       });
+      id++;
     });
   }, [props.data]);
+  {
+  }
 
   // Define the data for the grid
   const data = {
@@ -46,8 +50,13 @@ export default function DataTable(props) {
         flex: 1,
       },
       {
+        field: "description",
+        headerName: "Description",
+        flex: 1,
+      },
+      {
         field: "value",
-        headerName: "State",
+        headerName: "State (On/Off)",
         flex: 1,
         // Render the cell with either a checkmark or an x based on the value
         renderCell: (params) => {
@@ -64,7 +73,7 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
-          return <Button className="updateButton">Update State</Button>;
+          return <Link href={`feature-item/${params.row.id}`}>Update</Link>;
         },
       },
     ],
