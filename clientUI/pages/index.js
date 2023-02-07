@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
 
-import FeatureFlagPage from "./FeatureFlagPage";
 import DataTable from "../components/Table/DataTable";
 function HomePage(props) {
   let featureData = props.data.status && props.data.data;
@@ -15,7 +14,6 @@ function HomePage(props) {
 
   return (
     <React.Fragment>
-      <FeatureFlagPage />
       <DataTable data={props.data.data} />
     </React.Fragment>
   );

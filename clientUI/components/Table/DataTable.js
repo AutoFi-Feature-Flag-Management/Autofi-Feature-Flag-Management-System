@@ -74,7 +74,14 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
-          return <Link href={`feature-item/${params.row.id}`}>Update</Link>;
+          return (
+            <Link
+              className={classes.link}
+              href={`feature-item/${params.row.id}`}
+            >
+              Update
+            </Link>
+          );
         },
       },
     ],

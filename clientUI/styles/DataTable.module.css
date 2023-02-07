@@ -11,7 +11,7 @@
   font-size: 1.5rem;
 }
 
-.updateButton {
-  height: 50px;
-  width: 50px;
+.link {
+  color: blue;
+  text-decoration: underline;
 }
