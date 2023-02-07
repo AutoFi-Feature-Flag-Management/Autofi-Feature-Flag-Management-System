@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
-import FeatureFlagPage from "./FeatureFlagPage";
 
 import Table from "../components/Table";
 function HomePage(props) {

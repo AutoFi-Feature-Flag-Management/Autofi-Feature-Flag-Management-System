@@ -8,14 +8,14 @@ import autofiIcon from "../../public/autofi_icon.png";
 import Image from "next/Image";
 import classes from "../../styles/FeatureFlagPage.module.css";
 
+import {handler} from '../api/fetchHandler';
+
 const featureFlag = {
   key: "1",
   name: "Feature Name",
   value: true,
   lastUpdatedDate: new Date("2022-03-25"),
 };
-
-
 
 function FeaturePage() {
   const router = useRouter();
@@ -27,15 +27,22 @@ function FeaturePage() {
   };
 
   const onReturnHome = () => {
-    //Redirects back to home page
+    console.log("Return home");
     setModalType("");
+    router.push("/")
   };
 
+  let postResponse;
   const onSave = () => {
+    //Step 1: send POST request for feature flag
+    postResponse = "Changes saved!"
     setModalType("Saved");
+    //Step 2: Display post response on modal --> changes saved or error
   };
 
   const onReturn = () => {
+    //Check and see if there has been a change to status without saving
+    //Toggle should be tracking every time it has been switched
     setModalType("Home");
   };
 
@@ -44,7 +51,7 @@ function FeaturePage() {
       <div>
         {modalType === "Saved" && (
           <Modal
-            title="Changes Saved!"
+            title={postResponse}
             message="Feature flag status has been updated successfully."
             onCancel={onCloseModal}
             onConfirm={onReturnHome}
