@@ -2,9 +2,11 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
+
 import FeatureFlagPage from "./FeatureFlagPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DataTable from "../components/Table/DataTable";
+
 function HomePage(props) {
   let featureData = props.data.status && props.data.data;
   const featureFlag = {
@@ -137,8 +139,10 @@ function HomePage(props) {
         <Link href="feature-item/test"> This is a test link</Link>
       </p>
       <Toggle state={true}></Toggle>
+
       <FeatureFlagPage />
       <DataTable data={featureFlags} />
+
     </React.Fragment>
   );
 }
