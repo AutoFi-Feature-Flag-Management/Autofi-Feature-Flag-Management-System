@@ -2,9 +2,8 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
+import Button from "../components/UI/button";
 
-import FeatureFlagPage from "./FeatureFlagPage";
-import "bootstrap/dist/css/bootstrap.min.css";
 import DataTable from "../components/Table/DataTable";
 
 function HomePage(props) {
@@ -135,12 +134,13 @@ function HomePage(props) {
 
   return (
     <React.Fragment>
+      {console.log(props)}
       <p>
-        <Link href="feature-item/test"> This is a test link</Link>
+        <Button>
+        <Link href="feature-item/test"> This is a test link</Link></Button>
       </p>
       <Toggle state={true}></Toggle>
 
-      <FeatureFlagPage />
       <DataTable data={featureFlags} />
 
     </React.Fragment>
@@ -150,8 +150,8 @@ export default HomePage;
 
 export async function getStaticProps() {
   const response = await handler({
-    url: "http://localhost:3001/1/false",
-    method: "POST",
+    url: "http://localhost:3001/featureflags",
+    method: "GET",
   });
   if (response.status) {
     return {
