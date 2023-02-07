@@ -7,10 +7,10 @@ const clientController = require("../clientContoller/clientController");
 const router = express.Router();
 
 /**
- * @route POST /:id/:status
- * @desc Updates the status of a feature flag with a given id.
+ * @route POST /:key/:value
+ * @desc Updates the value of a feature flag with a given key.
  * @access
  */
-router.post("/:id/:status", clientController.changeFlag);
+router.post("/:key/:value", clientController.changeFlag);
 
 module.exports = router;
