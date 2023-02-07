@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import Link from "next/link";
 import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
 
@@ -16,11 +15,6 @@ function HomePage(props) {
 
   return (
     <React.Fragment>
-      <p>
-        <Link href="feature-item/test"> This is a test link</Link>
-      </p>
-      <Toggle state={true}></Toggle>
-
       <FeatureFlagPage />
       <DataTable data={props.data.data} />
     </React.Fragment>
@@ -30,7 +24,7 @@ export default HomePage;
 
 export async function getStaticProps() {
   const response = await handler({
-    url: "http://localhost:3001/",
+    url: "http://localhost:3001/featureflags",
     method: "GET",
   });
   if (response.status) {
