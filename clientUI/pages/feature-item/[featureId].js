@@ -7,7 +7,8 @@ import Toggle from "../../components/UI/Toggle";
 import autofiIcon from "../../public/autofi_icon.png";
 import Image from "next/Image";
 import classes from "../../styles/FeatureFlagPage.module.css";
-import { handler } from "../api/fetchHandler";
+import handler from "../api/fetchHandler";
+import FeatureFlag from "../../../shared/model/featureFlag";
 
 const featureFlag = {
   key: "1",
@@ -22,24 +23,7 @@ function FeaturePage() {
   const [loading, setLoading] = useState(true);
   const [feature, setFeature] = useState({});
 
-  // useEffect(async () => {
-  //   const response = await handler({
-  //     url: "http://localhost:3001/featureflags",
-  //     method: "GET",
-  //   });
-  //   return (setFeature({data: response}));
-  // })
-
-  const test = async () => {
-    const response = await handler({
-      url: "http://localhost:3001/featureflags",
-      method: "GET",
-    });
-    return setFeature({ data: response });
-  };
-
   console.log(feature);
-
   const onCloseModal = () => {
     setModalType("");
   };
@@ -101,5 +85,39 @@ function FeaturePage() {
       </div>
     </React.Fragment>
   );
+}
+
+export async function getStaticPaths() {
+  return {
+    fallback: true,
+    paths: [
+      {
+        params: {
+          featureId: "0",
+        },
+      },
+      {
+        params: {
+          featureId: "1",
+        },
+      },
+      {
+        params: {
+          featureId: "2",
+        },
+      },
+    ],
+  };
+}
+
+export async function getStaticProps(context) {
+  const key = context.params.featureId;
+  //fetch data for a single meetup
+  console.log(key);
+  return {
+    props: {
+      key: key,
+    },
+  };
 }
 export default FeaturePage;
