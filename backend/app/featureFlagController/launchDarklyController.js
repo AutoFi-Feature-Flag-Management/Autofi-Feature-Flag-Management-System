@@ -13,7 +13,7 @@ async function getFeatureFlags(projectKey = "default") {
     {
       method: "GET",
       headers: {
-        Authorization: "api-5380598a-207a-454b-956c-f862ddebc08a",
+        Authorization: "api-b85a475e-50aa-4866-b376-a89bbefa98bb",
       },
     }
   );
@@ -50,7 +50,7 @@ async function changeFlag(parameters) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+        Authorization: "api-b85a475e-50aa-4866-b376-a89bbefa98bb",
       },
       body: JSON.stringify({
         patch: [
