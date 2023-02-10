@@ -1,123 +1,67 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Modal from "../../components/UI/Modal";
 import { useState, useEffect } from "react";
-import Button from "../../components/UI/button";
-import Toggle from "../../components/UI/Toggle";
-import autofiIcon from "../../public/autofi_icon.png";
-import Image from "next/Image";
-import classes from "../../styles/FeatureFlagPage.module.css";
-import handler from "../api/fetchHandler";
+import FeatureFlagComponent from "../../components/FeatureFlag/FeatureFlag";
 import FeatureFlag from "../../../shared/model/featureFlag";
-
-const featureFlag = {
-  key: "1",
-  name: "Feature Name",
-  value: true,
-  lastUpdatedDate: new Date("2022-03-25"),
-};
+import api from "../api/axios";
+import LoadingModal from "../../components/FeatureFlag/LoadingModal";
 
 function FeaturePage() {
   const router = useRouter();
-  const [modalType, setModalType] = useState("");
   const [loading, setLoading] = useState(true);
   const [feature, setFeature] = useState({});
 
-  console.log(feature);
-  const onCloseModal = () => {
-    setModalType("");
-  };
+  const onSave =() => {
+    alert("Response from post");
+    console.log("save");
+  }
 
-  const onReturnHome = () => {
-    console.log("Return home");
-    setModalType("");
-    router.push("/");
-  };
+  const onReturn =() => {
+    console.log("return");
+  }
 
-  let postResponse;
-  const onSave = () => {
-    //Step 1: send POST request for feature flag
-    postResponse = "Changes saved!";
-    setModalType("Saved");
-    //Step 2: Display post response on modal --> changes saved or error
-  };
-
-  const onReturn = () => {
-    //Check and see if there has been a change to status without saving
-    //Toggle should be tracking every time it has been switched
-    setModalType("Home");
-  };
+  useEffect(() => {
+    const fetchFeatureFlag = async () => {
+      try {
+        console.log(loading);
+        const response = await api.get("/featureflags");
+        setFeature(
+          new FeatureFlag(
+            response.data[1].key,
+            response.data[1].name,
+            response.data[1].value,
+            response.data[1].lastUpdatedDate,
+            response.data[1].description
+          )
+        );
+        setLoading(false);
+      } catch (err) {
+        if (err.response) {
+          // Not in 200 response range
+          console.log(err.response.data);
+        } else {
+          //No response at all (404, etc)
+          console.log(`Error ${err.message}`);
+        }
+      }
+    };
+    fetchFeatureFlag();
+  }, []);
 
   return (
-    <React.Fragment>
-      <div>
-        {modalType === "Saved" && (
-          <Modal
-            title={postResponse}
-            message="Feature flag status has been updated successfully."
-            onCancel={onCloseModal}
-            onConfirm={onReturnHome}
-          />
-        )}
-        {modalType === "Home" && (
-          <Modal
-            title="Are you Sure?"
-            message="If you return to home any status changes will be lost."
-            onCancel={onCloseModal}
-            onConfirm={onReturnHome}
-          />
-        )}
-        <div className={classes.title}>
-          <h1>
-            <Image src={autofiIcon} alt="AutoFi Icon" className={classes.img} />
-            {featureFlag.name}
-          </h1>
-        </div>
-
-        <div className={classes.toggle}>
-          <Toggle />
-        </div>
-
-        <div className={classes.container}>
-          <Button onClick={onSave}>Save</Button>
-          <Button onClick={onReturn}>Home</Button>
-        </div>
-      </div>
-    </React.Fragment>
+    <div>
+      {loading ? (
+        <LoadingModal />
+      ) : (
+        <FeatureFlagComponent
+          name={feature.name}
+          value={feature.value}
+          onSave={onSave}
+          onReturn={onReturn}
+        />
+      )}
+    </div>
   );
 }
 
-export async function getStaticPaths() {
-  return {
-    fallback: true,
-    paths: [
-      {
-        params: {
-          featureId: "0",
-        },
-      },
-      {
-        params: {
-          featureId: "1",
-        },
-      },
-      {
-        params: {
-          featureId: "2",
-        },
-      },
-    ],
-  };
-}
-
-export async function getStaticProps(context) {
-  const key = context.params.featureId;
-  //fetch data for a single meetup
-  console.log(key);
-  return {
-    props: {
-      key: key,
-    },
-  };
-}
 export default FeaturePage;

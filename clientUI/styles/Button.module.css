@@ -5,6 +5,7 @@
   border-color: #2f92e3;
   color: white;
   border-radius: 8px;
+  margin: 0.5rem;
 }
 
 .button:hover,
