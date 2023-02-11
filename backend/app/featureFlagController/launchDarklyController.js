@@ -29,7 +29,7 @@ async function getFeatureFlags(projectKey = "default") {
  * @function
  * @param {Object} parameters - The parameters for updating the feature flag.
  * @param {string} parameters.key - The key of the feature flag.
- * @param {boolean} parameters.value - The new value of the feature flag.
+ * @param {string} parameters.value - The new value of the feature flag.
  */
 async function changeFlag(parameters) {
   const projectKey = "default";
