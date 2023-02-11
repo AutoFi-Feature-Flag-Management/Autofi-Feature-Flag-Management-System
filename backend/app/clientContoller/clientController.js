@@ -29,12 +29,12 @@ const getFeatureFlags = async (req, res) => {
  * @param {object} req - Express request object
  * @param {object} res - Express response object
  * @param {function} next - Express next middleware function
- * @description - Calls the changeFlag function of the business layer and sends the request parameters as a response.
+ * @description - Calls the changeFlag function of the business layer and sends the request body as a response.
  * @returns {object} - HTTP response object
  */
 const changeFlag = async (req, res, next) => {
   try {
-    res.send(await business.changeFlag(req.params));
+    res.send(await business.changeFlag(req.body));
   } catch (e) {
     console.log(e.message);
     res.status(400);
