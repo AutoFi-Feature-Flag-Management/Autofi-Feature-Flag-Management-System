@@ -18,7 +18,7 @@ export default function FeatureFlag(props) {
         </div>
 
         <div className={classes.toggle}>
-          <Toggle state={props.value} />
+          <Toggle state={props.value} toggleStateHandler={props.toggleStateHandler} />
         </div>
 
         <div className={classes.container}>

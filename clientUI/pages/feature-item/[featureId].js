@@ -10,25 +10,24 @@ function FeaturePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [feature, setFeature] = useState({});
-
-  //Post Response will be set if a flag has been changed and a response has been received
-  //This should trigger the use effect - if postResponse changes call another GET
-  const [postResponse, setPostResponse] = useState(null);
+  const [toggleState, setToggleState] = useState(null);
+  const [unsavedChange, setUnsavedChange] = useState(false);
+  const [posted, setPosted] = useState(false);
 
   useEffect(() => {
     const fetchFeatureFlag = async () => {
       try {
-        console.log(loading);
         const response = await api.get("/featureflags");
         setFeature(
           new FeatureFlag(
-            response.data[1].key,
-            response.data[1].name,
-            response.data[1].value,
-            response.data[1].lastUpdatedDate,
-            response.data[1].description
+            response.data[0].key,
+            response.data[0].name,
+            response.data[0].value,
+            response.data[0].lastUpdatedDate,
+            response.data[0].description
           )
         );
+        setToggleState(response.data[0].value);
         setLoading(false);
       } catch (err) {
         if (err.response) {
@@ -41,22 +40,44 @@ function FeaturePage() {
       }
     };
     fetchFeatureFlag();
-  }, [postResponse]);
+  }, [posted]);
+
+  const toggleStateHandler = () => {
+    setToggleState((prevState) => {
+      if (!prevState !== feature.value) {
+        setUnsavedChange(true);
+        return !prevState;
+      } else {
+        setUnsavedChange(false);
+        return !prevState;
+      }
+    });
+  };
 
   const onSave = async () => {
     //Post object new object to server
     try {
-      const response = await api.post("/"+feature.key+"/"+feature.value);
-      setPostResponse(response.data);
+      const response = await api.post("/" + feature.key + "/" + toggleState);
+      //If Successful post
+        //Set postResponse to "" again
+        setPosted(true);
+        setUnsavedChange(false);
       console.log(response.data);
     } catch (err) {
       console.log(`Error ${err.message}`);
     }
-    console.log("save");
   };
 
   const onReturn = () => {
-    console.log("return");
+    //Figure out how to check if status has been changed without save.
+    if (unsavedChange) {
+      //Render an Are You Sure? modal
+      alert(
+        "You have unsaved changes. If you return home they won't be saved."
+      );
+      return;
+    }
+    router.push("/");
   };
 
   return (
@@ -67,6 +88,7 @@ function FeaturePage() {
         <FeatureFlagComponent
           name={feature.name}
           value={feature.value}
+          toggleStateHandler={toggleStateHandler}
           onSave={onSave}
           onReturn={onReturn}
         />
