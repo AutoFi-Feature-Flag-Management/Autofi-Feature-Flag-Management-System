@@ -43,16 +43,21 @@ function FeaturePage() {
     fetchFeatureFlag();
   }, [postResponse]);
 
-
-  const onSave =() => {
-    //Sends feature object away
-    alert("Response from post");
+  const onSave = async () => {
+    //Post object new object to server
+    try {
+      const response = await api.post("/"+feature.key+"/"+feature.value);
+      setPostResponse(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.log(`Error ${err.message}`);
+    }
     console.log("save");
-  }
+  };
 
-  const onReturn =() => {
+  const onReturn = () => {
     console.log("return");
-  }
+  };
 
   return (
     <div>
