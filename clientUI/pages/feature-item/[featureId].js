@@ -19,6 +19,9 @@ function FeaturePage() {
   useEffect(() => {
     const fetchFeatureFlag = async () => {
       try {
+        setLoading(true);
+        setPosted(false);
+        //Update path and data handling once feature flag specific api is set up
         const response = await api.get("/featureflags");
         setFeature(
           new FeatureFlag(
@@ -42,6 +45,7 @@ function FeaturePage() {
       }
     };
     fetchFeatureFlag();
+    console.log("effect ran");
   }, [posted]);
 
   const toggleStateHandler = () => {
@@ -60,11 +64,16 @@ function FeaturePage() {
     //Post object new object to server
     try {
       const response = await api.post("/" + feature.key + "/" + toggleState);
+      //TODO: Set up post response handling
       //If Successful post
-      //Set postResponse to "" again
-      setPosted(true);
-      setUnsavedChange(false);
-      console.log(response.data);
+      const success = false;
+      if (success) {
+        setPosted(true);
+        setUnsavedChange(false);
+        setModalType("Saved");
+      } else {
+        alert(response.data.message);
+      }
     } catch (err) {
       console.log(`Error ${err.message}`);
     }
@@ -81,19 +90,27 @@ function FeaturePage() {
 
   const closeModal = () => {
     setModalType("");
-  }
+  };
 
   const returnToHome = () => {
     setModalType("");
     router.push("/");
-  }
+  };
 
   return (
     <div>
       {modalType === "Return" && (
         <Modal
           title="Are You Sure?"
-          message="You have not saved your changes and will lose them if you return home"
+          message="You have not saved your changes and will lose them if you return home."
+          onCancel={closeModal}
+          onConfirm={returnToHome}
+        />
+      )}
+      {modalType === "Saved" && (
+        <Modal
+          title="Changes Saved"
+          message="Feature flag status successfully updated!"
           onCancel={closeModal}
           onConfirm={returnToHome}
         />
