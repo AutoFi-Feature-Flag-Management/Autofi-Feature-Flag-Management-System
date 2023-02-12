@@ -5,6 +5,7 @@ import FeatureFlagComponent from "../../components/FeatureFlag/FeatureFlag";
 import FeatureFlag from "../../../shared/model/featureFlag";
 import api from "../api/axios";
 import LoadingModal from "../../components/FeatureFlag/LoadingModal";
+import Modal from "../../components/UI/Modal";
 
 function FeaturePage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ function FeaturePage() {
   const [toggleState, setToggleState] = useState(null);
   const [unsavedChange, setUnsavedChange] = useState(false);
   const [posted, setPosted] = useState(false);
+  const [modalType, setModalType] = useState("");
 
   useEffect(() => {
     const fetchFeatureFlag = async () => {
@@ -59,9 +61,9 @@ function FeaturePage() {
     try {
       const response = await api.post("/" + feature.key + "/" + toggleState);
       //If Successful post
-        //Set postResponse to "" again
-        setPosted(true);
-        setUnsavedChange(false);
+      //Set postResponse to "" again
+      setPosted(true);
+      setUnsavedChange(false);
       console.log(response.data);
     } catch (err) {
       console.log(`Error ${err.message}`);
@@ -69,19 +71,33 @@ function FeaturePage() {
   };
 
   const onReturn = () => {
-    //Figure out how to check if status has been changed without save.
     if (unsavedChange) {
       //Render an Are You Sure? modal
-      alert(
-        "You have unsaved changes. If you return home they won't be saved."
-      );
+      setModalType("Return");
       return;
     }
     router.push("/");
   };
 
+  const closeModal = () => {
+    setModalType("");
+  }
+
+  const returnToHome = () => {
+    setModalType("");
+    router.push("/");
+  }
+
   return (
     <div>
+      {modalType === "Return" && (
+        <Modal
+          title="Are You Sure?"
+          message="You have not saved your changes and will lose them if you return home"
+          onCancel={closeModal}
+          onConfirm={returnToHome}
+        />
+      )}
       {loading ? (
         <LoadingModal />
       ) : (
