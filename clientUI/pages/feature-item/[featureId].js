@@ -11,14 +11,9 @@ function FeaturePage() {
   const [loading, setLoading] = useState(true);
   const [feature, setFeature] = useState({});
 
-  const onSave =() => {
-    alert("Response from post");
-    console.log("save");
-  }
-
-  const onReturn =() => {
-    console.log("return");
-  }
+  //Post Response will be set if a flag has been changed and a response has been received
+  //This should trigger the use effect - if postResponse changes call another GET
+  const [postResponse, setPostResponse] = useState(null);
 
   useEffect(() => {
     const fetchFeatureFlag = async () => {
@@ -46,7 +41,18 @@ function FeaturePage() {
       }
     };
     fetchFeatureFlag();
-  }, []);
+  }, [postResponse]);
+
+
+  const onSave =() => {
+    //Sends feature object away
+    alert("Response from post");
+    console.log("save");
+  }
+
+  const onReturn =() => {
+    console.log("return");
+  }
 
   return (
     <div>
