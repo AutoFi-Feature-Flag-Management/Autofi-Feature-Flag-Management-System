@@ -13,7 +13,7 @@ async function getFeatureFlags(projectKey = "default") {
     {
       method: "GET",
       headers: {
-        Authorization: "api-5380598a-207a-454b-956c-f862ddebc08a",
+        Authorization: "api-b85a475e-50aa-4866-b376-a89bbefa98bb",
       },
     }
   );
@@ -29,11 +29,16 @@ async function getFeatureFlags(projectKey = "default") {
  * @function
  * @param {Object} parameters - The parameters for updating the feature flag.
  * @param {string} parameters.key - The key of the feature flag.
- * @param {boolean} parameters.value - The new value of the feature flag.
+ * @param {string} parameters.value - The new value of the feature flag.
  */
 async function changeFlag(parameters) {
   const projectKey = "default";
   const featureFlagKey = parameters.key;
+
+  // Logic to ensure featureFlagValue is passed as a Boolean and not a String in JSON.
+  // If the parameters.value is passed directly into the JSON.stringify statement, or
+  // if the featureFlagValue is assigned the parameters.value, the value will not be boolean
+  // and will be passed as a string.
   let featureFlagValue = false;
   if (parameters.value == "true") {
     featureFlagValue = true;
@@ -45,7 +50,7 @@ async function changeFlag(parameters) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+        Authorization: "api-b85a475e-50aa-4866-b376-a89bbefa98bb",
       },
       body: JSON.stringify({
         patch: [
