@@ -1,16 +1,9 @@
 import React, { useMemo } from "react";
-import Toggle from "../components/UI/Toggle";
 import handler from "./api/fetchHandler";
 
 import DataTable from "../components/Table/DataTable";
 function HomePage(props) {
   let featureData = props.data.status && props.data.data;
-  const featureFlag = {
-    key: "1",
-    name: "Feature Name",
-    value: true,
-    lastUpdatedDate: new Date("2022-03-25"),
-  };
 
   return (
     <React.Fragment>

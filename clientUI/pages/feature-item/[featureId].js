@@ -1,87 +1,133 @@
 import { useRouter } from "next/router";
 import React from "react";
+import { useState, useEffect } from "react";
+import FeatureFlagComponent from "../../components/FeatureFlag/FeatureFlag";
+import FeatureFlag from "../../../shared/model/featureFlag";
+import api from "../api/axios";
+import LoadingModal from "../../components/FeatureFlag/LoadingModal";
 import Modal from "../../components/UI/Modal";
-import { useState } from "react";
-import Button from "../../components/UI/button";
-import Toggle from "../../components/UI/Toggle";
-import autofiIcon from "../../public/autofi_icon.png";
-import Image from "next/Image";
-import classes from "../../styles/FeatureFlagPage.module.css";
-
-import {handler} from '../api/fetchHandler';
-
-const featureFlag = {
-  key: "1",
-  name: "Feature Name",
-  value: true,
-  lastUpdatedDate: new Date("2022-03-25"),
-};
 
 function FeaturePage() {
   const router = useRouter();
-  const featureFlagObj = router.query.featureId;
+  const [loading, setLoading] = useState(true);
+  const [feature, setFeature] = useState({});
+  const [toggleState, setToggleState] = useState(null);
+  const [unsavedChange, setUnsavedChange] = useState(false);
+  const [posted, setPosted] = useState(false);
   const [modalType, setModalType] = useState("");
 
-  const onCloseModal = () => {
-    setModalType("");
+  useEffect(() => {
+    const fetchFeatureFlag = async () => {
+      try {
+        setLoading(true);
+        setPosted(false);
+        //Update path and data handling once feature flag specific api is set up
+        const response = await api.get("/featureflags");
+        setFeature(
+          new FeatureFlag(
+            response.data[0].key,
+            response.data[0].name,
+            response.data[0].value,
+            response.data[0].lastUpdatedDate,
+            response.data[0].description
+          )
+        );
+        setToggleState(response.data[0].value);
+        setLoading(false);
+      } catch (err) {
+        if (err.response) {
+          // Not in 200 response range
+          console.log(err.response.data);
+        } else {
+          //No response at all (404, etc)
+          console.log(`Error ${err.message}`);
+        }
+      }
+    };
+    fetchFeatureFlag();
+    console.log("effect ran");
+  }, [posted]);
+
+  const toggleStateHandler = () => {
+    setToggleState((prevState) => {
+      if (!prevState !== feature.value) {
+        setUnsavedChange(true);
+        return !prevState;
+      } else {
+        setUnsavedChange(false);
+        return !prevState;
+      }
+    });
   };
 
-  const onReturnHome = () => {
-    console.log("Return home");
-    setModalType("");
-    router.push("/")
-  };
-
-  let postResponse;
-  const onSave = () => {
-    //Step 1: send POST request for feature flag
-    postResponse = "Changes saved!"
-    setModalType("Saved");
-    //Step 2: Display post response on modal --> changes saved or error
+  const onSave = async () => {
+    //Post object new object to server
+    try {
+      const response = await api.post("/" + feature.key + "/" + toggleState);
+      //TODO: Set up post response handling
+      //If Successful post
+      const success = false;
+      if (success) {
+        setPosted(true);
+        setUnsavedChange(false);
+        setModalType("Saved");
+      } else {
+        alert(response.data.message);
+      }
+    } catch (err) {
+      console.log(`Error ${err.message}`);
+    }
   };
 
   const onReturn = () => {
-    //Check and see if there has been a change to status without saving
-    //Toggle should be tracking every time it has been switched
-    setModalType("Home");
+    if (unsavedChange) {
+      //Render an Are You Sure? modal
+      setModalType("Return");
+      return;
+    }
+    router.push("/");
+  };
+
+  const closeModal = () => {
+    setModalType("");
+  };
+
+  const returnToHome = () => {
+    setModalType("");
+    router.push("/");
   };
 
   return (
-    <React.Fragment>
-      <div>
-        {modalType === "Saved" && (
-          <Modal
-            title={postResponse}
-            message="Feature flag status has been updated successfully."
-            onCancel={onCloseModal}
-            onConfirm={onReturnHome}
-          />
-        )}
-        {modalType === "Home" && (
-          <Modal
-            title="Are you Sure?"
-            message="If you return to home any status changes will be lost."
-            onCancel={onCloseModal}
-            onConfirm={onReturnHome}
-          />
-        )}
-        <div className={classes.title}>
-          <h1>
-            <Image src={autofiIcon} alt="AutoFi Icon" className={classes.img} />
-            {featureFlag.name}
-          </h1>
-        </div>
-
-        <div className={classes.toggle}>
-          <Toggle />
-        </div>
-
-        <div className={classes.container}>
-          <Button onClick={onSave}>Save</Button>
-          <Button onClick={onReturn}>Home</Button>
-        </div>
-      </div>
-    </React.Fragment>
+    <div>
+      {modalType === "Return" && (
+        <Modal
+          title="Are You Sure?"
+          message="You have not saved your changes and will lose them if you return home."
+          onCancel={closeModal}
+          onConfirm={returnToHome}
+        />
+      )}
+      {modalType === "Saved" && (
+        <Modal
+          title="Changes Saved"
+          message="Feature flag status successfully updated!"
+          onCancel={closeModal}
+          onConfirm={returnToHome}
+        />
+      )}
+      {loading ? (
+        <LoadingModal />
+      ) : (
+        <FeatureFlagComponent
+          name={feature.name}
+          value={feature.value}
+          toggleStateHandler={toggleStateHandler}
+          onSave={onSave}
+          onReturn={onReturn}
+        />
+      )}
+    </div>
   );
 }
+
 export default FeaturePage;

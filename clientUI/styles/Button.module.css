@@ -5,8 +5,7 @@
   border-color: #2f92e3;
   color: white;
   border-radius: 8px;
-  font-size: 16px;
-  min-width: 150px;
+  margin: 0.5rem;
 }
 
 .button:hover,
