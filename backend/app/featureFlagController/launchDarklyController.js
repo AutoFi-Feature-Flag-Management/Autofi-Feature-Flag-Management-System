@@ -29,20 +29,12 @@ async function getFeatureFlags(projectKey = "default") {
  * @function
  * @param {Object} parameters - The parameters for updating the feature flag.
  * @param {string} parameters.key - The key of the feature flag.
- * @param {string} parameters.value - The new value of the feature flag.
+ * @param {boolean} parameters.value - The new value of the feature flag.
  */
 async function changeFlag(parameters) {
   const projectKey = "default";
   const featureFlagKey = parameters.key;
-
-  // Logic to ensure featureFlagValue is passed as a Boolean and not a String in JSON.
-  // If the parameters.value is passed directly into the JSON.stringify statement, or
-  // if the featureFlagValue is assigned the parameters.value, the value will not be boolean
-  // and will be passed as a string.
-  let featureFlagValue = false;
-  if (parameters.value == "true") {
-    featureFlagValue = true;
-  }
+  const featureFlagValue = parameters.value;
 
   const resp = await fetch(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${featureFlagKey}`,
