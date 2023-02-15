@@ -37,11 +37,12 @@ const getFeatureFlag = async (parameters) => {
  * @param {Object} parameters - The parameters for the feature flag change.
  */
 const changeFlag = async (parameters) => {
-  // if (parameters.value != false || parameters.value != true) {
-  //   throw new Error("value must be a boolean");
-  // }
-  const data = await launchDarklyController.changeFlag(parameters);
-  return data;
+  if (typeof parameters.value === "boolean") {
+    const data = await launchDarklyController.changeFlag(parameters);
+    return data;
+  } else {
+    throw new Error("value must be a boolean");
+  }
 };
 
 module.exports = {
