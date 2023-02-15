@@ -1,10 +1,10 @@
 /**
  * This module exports functions to marshal feature flag data from LaunchDarkly.
  *
- * @module featureFlagMarshal
+ * @module launchDarklyFeatureFlagMarshal
  */
 
-const FeatureFlag = require("../../../shared/model/featureFlag");
+const FeatureFlag = require("../../../../shared/model/featureFlag");
 
 /**
  * Marshals an array of feature flag data from a LaunchDarkly JSON file.
@@ -12,7 +12,7 @@ const FeatureFlag = require("../../../shared/model/featureFlag");
  * @param {string} json_file - The LaunchDarkly JSON file.
  * @returns {Array} An array of marshalled feature flags.
  */
-const featureFlagsMarshaller = (json_file) => {
+launchDarklyFlagsMarshaller = (json_file) => {
   //parsifying the launch darkly json_file into an object
   const launch_darkly_json = JSON.parse(json_file);
 
@@ -40,7 +40,7 @@ const featureFlagsMarshaller = (json_file) => {
  * @param {string} json_file - The LaunchDarkly JSON file.
  * @returns {Object} A feature flag object from the marshalled feature flag.
  */
-const featureFlagMarshaller = (json_file) => {
+launchDarklyFlagMarshaller = (json_file) => {
   //parsifying the launch darkly json_file into an object
   const launch_darkly_json = JSON.parse(json_file);
 
@@ -56,6 +56,6 @@ const featureFlagMarshaller = (json_file) => {
 };
 
 module.exports = {
-  featureFlagMarshaller,
-  featureFlagsMarshaller,
+  launchDarklyFlagMarshaller,
+  launchDarklyFlagsMarshaller,
 };
