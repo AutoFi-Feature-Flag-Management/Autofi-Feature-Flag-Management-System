@@ -18,11 +18,13 @@ export default function DataTable(props) {
   // Define an array to store the rows data
   let rows = [];
   let id = 0;
+  console.log(props.data);
   // Use the useMemo hook to transform the props.data into the required format
   useMemo(() => {
     props.data.map((feature) => {
       rows.push({
         id: +id, // Convert the key to a number
+        key: feature.key,
         name: feature.name,
         date: feature.lastUpdatedDate,
         description: feature.description,
@@ -74,10 +76,11 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
+          console.log(params.row.key);
           return (
             <Link
               className={classes.link}
-              href={`feature-item/${params.row.id}`}
+              href={`feature-item/${params.row.key}`}
             >
               Update
             </Link>
