@@ -15,7 +15,7 @@ const launchDarklyFeatureFlagMarshal = require("./marshals/launchDarklyFeatureFl
 const getFeatureFlags = async () => {
   const data = await launchDarklyController.getFeatureFlags();
   const feature_flags =
-    launchDarklyFeatureFlagMarshal.launchDarklyFlagsMarshaller(data);
+    launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller(data);
   return feature_flags;
 };
 
