@@ -1,76 +1,141 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import FeatureFlagComponent from "../../components/FeatureFlag/FeatureFlag";
 import FeatureFlag from "../../../shared/model/featureFlag";
 import api from "../api/axios";
 import LoadingModal from "../../components/FeatureFlag/LoadingModal";
 import Modal from "../../components/UI/Modal";
 
-function FeaturePage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [feature, setFeature] = useState({});
-  const [toggleState, setToggleState] = useState(null);
-  const [unsavedChange, setUnsavedChange] = useState(false);
-  const [posted, setPosted] = useState(false);
-  const [modalType, setModalType] = useState("");
-
-  useEffect(() => {
-    const fetchFeatureFlag = async () => {
-      try {
-        setLoading(true);
-        setPosted(false);
-        //Update path and data handling once feature flag specific api is set up
-        const response = await api.get("/featureflags");
-        setFeature(
-          new FeatureFlag(
-            response.data[0].key,
-            response.data[0].name,
-            response.data[0].value,
-            response.data[0].lastUpdatedDate,
-            response.data[0].description
-          )
-        );
-        setToggleState(response.data[0].value);
-        setLoading(false);
-      } catch (err) {
-        if (err.response) {
-          // Not in 200 response range
-          console.log(err.response.data);
-        } else {
-          //No response at all (404, etc)
-          console.log(`Error ${err.message}`);
+const flagPageManager = (state, action) => {
+  console.log(action.type);
+  switch (action.type) {
+    case "DATA_GATHERED":
+      console.log("entered data gathered");
+      {
+        return {
+          ...state,
+          toggleState: action.response.data[0].value,
+          feature: new FeatureFlag(
+            action.response.data[0].key,
+            action.response.data[0].name,
+            action.response.data[0].value,
+            action.response.data[0].lastUpdatedDate,
+            action.response.data[0].description
+          ),
+          loading: false,
+        };
+      }
+    case "TOGGLE_CHANGED":
+      {
+        console.log("Entered Toggle Changed");
+        return {
+          ...state,
+          toggleState: !state.toggleState,
+        };
+      }
+    case "MODAL_SELECTION":
+      {
+        if (action.selection == "SAVED") {
+          return {
+            ...state,
+            modalType: (
+              <Modal
+                title="Changes Saved"
+                message="Feature flag status successfully updated!"
+                onCancel={state.fncloseModal}
+                onConfirm={state.fnreturnToHome}
+              />
+            ),
+          };
+        } else if (action.selection == "UNSAVED") {
+          return {
+            ...state,
+            modalType: (
+              <Modal
+                title="Are You Sure?"
+                message="You have not saved your changes and will lose them if you return home."
+                onCancel={state.fncloseModal}
+                onConfirm={state.fnreturnToHome}
+              />
+            ),
+          };
         }
       }
-    };
+      break;
+  }
+  return { ...state, modalType: null };
+};
+
+export default function FeaturePage() {
+  const router = useRouter();
+  const closeModal = () => {
+    dispatchPageHandler({
+      type: "MODAL_SELECTION",
+    });
+  };
+  const returnToHome = () => {
+    dispatchPageHandler({
+      type: "MODAL_SELECTION",
+    });
+    router.push("/");
+  };
+  const [flagPage, dispatchPageHandler] = useReducer(flagPageManager, {
+    loading: true,
+    feature: {},
+    toggleState: null,
+    modalType: null,
+    fncloseModal: closeModal,
+    fnreturnToHome: returnToHome,
+  });
+
+  const fetchFeatureFlag = async () => {
+    try {
+      //Update path and data handling once feature flag specific api is set up
+      const response = await api.get("/featureflags");
+      dispatchPageHandler({
+        type: "DATA_GATHERED",
+        response: response,
+      });
+    } catch (err) {
+      if (err.response) {
+        // Not in 200 response range
+        console.log(err.response.data);
+      } else {
+        //No response at all (404, etc)
+        console.log(`Error ${err.message}`);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchFeatureFlag();
-    console.log("effect ran");
-  }, [posted]);
+    console.log("Effect ran on start");
+  }, []);
 
   const toggleStateHandler = () => {
-    setToggleState((prevState) => {
-      if (!prevState !== feature.value) {
-        setUnsavedChange(true);
-        return !prevState;
-      } else {
-        setUnsavedChange(false);
-        return !prevState;
-      }
+    dispatchPageHandler({
+      type: "TOGGLE_CHANGED",
     });
   };
 
   const onSave = async () => {
     //Post object new object to server
     try {
-      const response = await api.post("/" + feature.key + "/" + toggleState);
+      console.log(flagPage.feature.key, flagPage.toggleState);
+      const response = await api.post(
+        "/" + flagPage.feature.key + "/" + flagPage.toggleState
+      );
       //TODO: Set up post response handling
       //If Successful post
       const success = false;
+      console.log(response);
       if (success) {
-        setPosted(true);
-        setUnsavedChange(false);
-        setModalType("Saved");
+        dispatchPageHandler({
+          type: "MODAL_SELECTION",
+          selection: "SAVED",
+        });
+        fetchFeatureFlag();
       } else {
         alert(response.data.message);
       }
@@ -80,47 +145,26 @@ function FeaturePage() {
   };
 
   const onReturn = () => {
-    if (unsavedChange) {
-      //Render an Are You Sure? modal
-      setModalType("Return");
+    console.log(flagPage.toggleState, flagPage.feature.value);
+    if (flagPage.toggleState !== flagPage.feature.value) {
+      dispatchPageHandler({
+        type: "MODAL_SELECTION",
+        selection: "UNSAVED",
+      });
       return;
     }
     router.push("/");
   };
 
-  const closeModal = () => {
-    setModalType("");
-  };
-
-  const returnToHome = () => {
-    setModalType("");
-    router.push("/");
-  };
-
   return (
     <div>
-      {modalType === "Return" && (
-        <Modal
-          title="Are You Sure?"
-          message="You have not saved your changes and will lose them if you return home."
-          onCancel={closeModal}
-          onConfirm={returnToHome}
-        />
-      )}
-      {modalType === "Saved" && (
-        <Modal
-          title="Changes Saved"
-          message="Feature flag status successfully updated!"
-          onCancel={closeModal}
-          onConfirm={returnToHome}
-        />
-      )}
-      {loading ? (
+      {flagPage.modalType}
+      {flagPage.loading ? (
         <LoadingModal />
       ) : (
         <FeatureFlagComponent
-          name={feature.name}
-          value={feature.value}
+          name={flagPage.feature.name}
+          value={flagPage.feature.value}
           toggleStateHandler={toggleStateHandler}
           onSave={onSave}
           onReturn={onReturn}
@@ -129,5 +173,3 @@ function FeaturePage() {
     </div>
   );
 }
-
-export default FeaturePage;
