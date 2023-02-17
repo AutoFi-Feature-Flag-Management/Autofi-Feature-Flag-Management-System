@@ -15,25 +15,24 @@ const flagPageManager = (state, action) => {
       {
         return {
           ...state,
-          toggleState: action.response.data[0].value,
+          toggleState: action.response.data.value,
           feature: new FeatureFlag(
-            action.response.data[0].key,
-            action.response.data[0].name,
-            action.response.data[0].value,
-            action.response.data[0].lastUpdatedDate,
-            action.response.data[0].description
+            action.response.data.key,
+            action.response.data.name,
+            action.response.data.value,
+            action.response.data.lastUpdatedDate,
+            action.response.data.description
           ),
           loading: false,
         };
       }
-    case "TOGGLE_CHANGED":
-      {
-        console.log("Entered Toggle Changed");
-        return {
-          ...state,
-          toggleState: !state.toggleState,
-        };
-      }
+    case "TOGGLE_CHANGED": {
+      console.log("Entered Toggle Changed");
+      return {
+        ...state,
+        toggleState: !state.toggleState,
+      };
+    }
     case "MODAL_SELECTION":
       {
         if (action.selection == "SAVED") {
@@ -92,7 +91,8 @@ export default function FeaturePage() {
   const fetchFeatureFlag = async () => {
     try {
       //Update path and data handling once feature flag specific api is set up
-      const response = await api.get("/featureflags");
+      const response = await api.get(`/featureflag/${router.query.featureId}`);
+      console.log(response);
       dispatchPageHandler({
         type: "DATA_GATHERED",
         response: response,
@@ -123,14 +123,14 @@ export default function FeaturePage() {
     //Post object new object to server
     try {
       console.log(flagPage.feature.key, flagPage.toggleState);
-      const response = await api.post(
-        "/" + flagPage.feature.key + "/" + flagPage.toggleState
-      );
-      //TODO: Set up post response handling
+      const response = await api.post("/changeflag", {
+        key: flagPage.feature.key,
+        value: flagPage.toggleState,
+      });
+
       //If Successful post
-      const success = false;
       console.log(response);
-      if (success) {
+      if (response.status===200) {
         dispatchPageHandler({
           type: "MODAL_SELECTION",
           selection: "SAVED",
