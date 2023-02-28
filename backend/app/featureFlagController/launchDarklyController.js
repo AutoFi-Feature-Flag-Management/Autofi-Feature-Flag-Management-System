@@ -20,6 +20,9 @@ async function getFeatureFlags(projectKey = "default") {
 
   const data = await resp.text();
   console.log(resp.status);
+  if (resp.status != 200) {
+    throw new Error(data.message);
+  }
   return data;
 }
 
@@ -48,6 +51,9 @@ async function getFeatureFlag(parameters) {
 
   const data = await resp.text();
   console.log(resp.status);
+  if (resp.status != 200) {
+    throw new Error(data.message);
+  }
   return data;
 }
 
@@ -86,6 +92,9 @@ async function changeFlag(parameters) {
 
   const data = await resp.json();
   console.log(resp.status);
+  if (resp.status != 200) {
+    throw new Error(data.message);
+  }
   return data;
 }
 
