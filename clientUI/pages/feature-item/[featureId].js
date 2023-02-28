@@ -17,11 +17,11 @@ const flagPageManager = (state, action) => {
           ...state,
           toggleState: action.response.data.value,
           feature: new FeatureFlag(
-            action.response.data.key,
-            action.response.data.name,
-            action.response.data.value,
-            action.response.data.lastUpdatedDate,
-            action.response.data.description
+            action.response.data[0].key,
+            action.response.data[0].name,
+            action.response.data[0].value,
+            action.response.data[0].lastUpdatedDate,
+            action.response.data[0].description
           ),
           loading: false,
         };
