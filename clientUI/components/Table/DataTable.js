@@ -76,7 +76,7 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
-          console.log(params.row.key);
+          // console.log(params.row.key);
           return (
             <Link
               className={classes.link}
