@@ -136,10 +136,12 @@ export default function FeaturePage() {
           selection: "SAVED",
         });
         fetchFeatureFlag();
+        //If post is not successful
       } else {
-        alert(response.data.message);
+        alert("Saved Failed: "+ response.data.message);
       }
     } catch (err) {
+      alert("Saved Failed: "+ err.message);
       console.log(`Error ${err.message}`);
     }
   };
