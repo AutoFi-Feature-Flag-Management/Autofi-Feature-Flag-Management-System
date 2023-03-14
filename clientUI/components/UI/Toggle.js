@@ -3,6 +3,8 @@ import classes from "../../styles/toggle.module.css";
 
 function Toggle(props) {
   const [toggleState, setToggleState] = useState(props.state);
+  console.log("Renrendered toggle")
+  console.log(toggleState)
 
   return (
     <React.Fragment>
