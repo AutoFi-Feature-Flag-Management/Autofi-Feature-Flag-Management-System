@@ -3,20 +3,23 @@ import classes from "../../styles/toggle.module.css";
 
 function Toggle(props) {
   const [toggleState, setToggleState] = useState(props.state);
-  console.log("Renrendered toggle")
-  console.log(toggleState)
 
   return (
     <React.Fragment>
-      <label className={classes["toggle-label"]}>
-        <input
-          className={classes["toggle-input"]}
-          type="checkbox"
-          defaultChecked={toggleState}
-          onClick={props.toggleStateHandler}
-        ></input>
-        <span className={classes["toggle-span"]} />
-      </label>
+      <div
+        className={`${classes["toggleContainer"]} ${
+          props.state
+            ? classes["toggleContainerTrue"]
+            : classes["toggleContainerFalse"]
+        }`}
+        onClick={props.toggleStateHandler}
+      >
+        <div
+          className={`${classes["toggle"]} ${
+            props.state ? classes["stateTrue"] : classes["stateFalse"]
+          }`}
+        ></div>
+      </div>
     </React.Fragment>
   );
 }
