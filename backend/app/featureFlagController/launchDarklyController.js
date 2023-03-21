@@ -7,24 +7,49 @@ ld_key = process.env.LD_API_KEY;
  * @async
  * Makes a GET request to LaunchDarkly API and returns the feature flags.
  * @function
- * @param {string} [projectKey='default'] - The project key of the feature flags.
+ * @param {string} parameters - The query parameters.
+ * @param {int} [parameters.limit] - The limit of feature flags to return
+ * @param {int} [parameters.offset] - The offset of feature flags list to return
  * @returns {string} The data returned by the API.
  */
-async function getFeatureFlags(projectKey = "default") {
-  const resp = await fetch(
-    `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: ld_key,
-      },
-    }
-  );
+async function getFeatureFlags(parameters) {
+  const projectKey = "default";
+  let limit = -1;
+  let offset = 0;
+  if (parameters.limit) {
+    limit = parameters.limit;
+  }
+  if (parameters.offset) {
+    offset = parameters.offset;
+  }
+  let resp;
+  if (limit == -1) {
+    resp = await fetch(
+      `https://app.launchdarkly.com/api/v2/flags/${projectKey}?offset=${offset}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: ld_key,
+        },
+      }
+    );
+  } else {
+    resp = await fetch(
+      `https://app.launchdarkly.com/api/v2/flags/${projectKey}?limit=${limit}&offset=${offset}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: ld_key,
+        },
+      }
+    );
+  }
 
-  const data = await resp.text();
+  const data = await resp.json();
   console.log(resp.status);
   if (resp.status !== 200) {
-    throw new Error(data.message);
+    console.log("API ERROR" + data.message);
+    throw new Error("Feature Flag API Error: " + data.message);
   }
   return data;
 }
@@ -42,6 +67,7 @@ async function getFeatureFlags(projectKey = "default") {
 async function getFeatureFlag(parameters) {
   const projectKey = "default";
   const featureFlagKey = parameters.key;
+
   const resp = await fetch(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${featureFlagKey}`,
     {
@@ -52,10 +78,11 @@ async function getFeatureFlag(parameters) {
     }
   );
 
-  const data = await resp.text();
+  const data = await resp.json();
   console.log(resp.status);
   if (resp.status !== 200) {
-    throw new Error(data.message);
+    console.log("API ERROR" + data.message);
+    throw new Error("Feature Flag API Error: " + data.message);
   }
   return data;
 }
@@ -96,7 +123,8 @@ async function changeFlag(parameters) {
   const data = await resp.json();
   console.log(resp.status);
   if (resp.status !== 200) {
-    throw new Error(data.message);
+    console.log("API ERROR" + data.message);
+    throw new Error("Feature Flag API Error: " + data.message);
   }
   return data;
 }

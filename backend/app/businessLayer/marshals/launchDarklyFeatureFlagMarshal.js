@@ -9,13 +9,10 @@ const FeatureFlag = require("../../../../shared/model/featureFlag");
 /**
  * Marshals feature flag data into an array from a LaunchDarkly JSON file.
  *
- * @param {string} json_file - The LaunchDarkly JSON file.
+ * @param {JSON} launch_darkly_json - The LaunchDarkly JSON file.
  * @returns {Array} An array of marshalled feature flags (or single flag).
  */
-launchDarklyFlagMarshaller = (json_file) => {
-  //parsifying the launch darkly json_file into an object
-  const launch_darkly_json = JSON.parse(json_file);
-
+launchDarklyFlagMarshaller = (launch_darkly_json) => {
   //creating feature flag array
   let feature_flags = [];
 
