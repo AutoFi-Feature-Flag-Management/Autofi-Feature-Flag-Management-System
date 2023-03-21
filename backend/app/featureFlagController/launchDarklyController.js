@@ -1,4 +1,7 @@
 const fetch = require("node-fetch");
+const dotenv = require("dotenv");
+dotenv.config();
+ld_key = process.env.LD_API_KEY;
 
 /**
  * @async
@@ -13,7 +16,7 @@ async function getFeatureFlags(projectKey = "default") {
     {
       method: "GET",
       headers: {
-        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+        Authorization: ld_key,
       },
     }
   );
@@ -44,7 +47,7 @@ async function getFeatureFlag(parameters) {
     {
       method: "GET",
       headers: {
-        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+        Authorization: ld_key,
       },
     }
   );
@@ -76,7 +79,7 @@ async function changeFlag(parameters) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "api-5ed283d6-d768-4a27-a478-92dc0f99c6aa",
+        Authorization: ld_key,
       },
       body: JSON.stringify({
         patch: [
