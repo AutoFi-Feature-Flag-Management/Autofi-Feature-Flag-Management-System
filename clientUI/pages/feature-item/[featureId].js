@@ -141,6 +141,7 @@ export default function FeaturePage() {
       }
     } catch (err) {
       fetchFeatureFlag();
+      console.log(flagPage.feature.value);
       alert("Saved Failed: "+ err.message);
       console.log(`Error ${err.message}`);
       
