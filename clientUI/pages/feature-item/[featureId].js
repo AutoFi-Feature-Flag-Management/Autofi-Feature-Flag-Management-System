@@ -11,11 +11,11 @@ const flagPageManager = (state, action) => {
   console.log(action.type);
   switch (action.type) {
     case "DATA_GATHERED":
-      console.log("entered data gathered");
+      //console.log("entered data gathered");
       {
         return {
           ...state,
-          toggleState: action.response.data.value,
+          toggleState: action.response.data[0].value,
           feature: new FeatureFlag(
             action.response.data[0].key,
             action.response.data[0].name,
@@ -27,7 +27,6 @@ const flagPageManager = (state, action) => {
         };
       }
     case "TOGGLE_CHANGED": {
-      console.log("Entered Toggle Changed");
       return {
         ...state,
         toggleState: !state.toggleState,
@@ -136,11 +135,16 @@ export default function FeaturePage() {
           selection: "SAVED",
         });
         fetchFeatureFlag();
+        //If post is not successful
       } else {
-        alert(response.data.message);
+        alert("Saved Failed: "+ response.data.message);
       }
     } catch (err) {
+      fetchFeatureFlag();
+      console.log(flagPage.feature.value);
+      alert("Saved Failed: "+ err.message);
       console.log(`Error ${err.message}`);
+      
     }
   };
 
@@ -171,5 +175,6 @@ export default function FeaturePage() {
         />
       )}
     </div>
+    
   );
 }
