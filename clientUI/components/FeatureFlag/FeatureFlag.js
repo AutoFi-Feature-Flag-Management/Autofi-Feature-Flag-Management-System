@@ -6,6 +6,8 @@ import Toggle from '../UI/Toggle'
 import Button from "../UI/button";
 
 export default function FeatureFlag(props) {
+  console.log("Rendered")
+  console.log(props.value)
 
   return (
     <React.Fragment>
