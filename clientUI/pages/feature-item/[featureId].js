@@ -10,22 +10,20 @@ import Modal from "../../components/UI/Modal";
 const flagPageManager = (state, action) => {
   console.log(action.type);
   switch (action.type) {
-    case "DATA_GATHERED":
-      //console.log("entered data gathered");
-      {
-        return {
-          ...state,
-          toggleState: action.response.data[0].value,
-          feature: new FeatureFlag(
-            action.response.data[0].key,
-            action.response.data[0].name,
-            action.response.data[0].value,
-            action.response.data[0].lastUpdatedDate,
-            action.response.data[0].description
-          ),
-          loading: false,
-        };
-      }
+    case "DATA_GATHERED": {
+      return {
+        ...state,
+        toggleState: action.response.data[0].value,
+        feature: new FeatureFlag(
+          action.response.data[0].key,
+          action.response.data[0].name,
+          action.response.data[0].value,
+          action.response.data[0].lastUpdatedDate,
+          action.response.data[0].description
+        ),
+        loading: false,
+      };
+    }
     case "TOGGLE_CHANGED": {
       return {
         ...state,
@@ -113,6 +111,7 @@ export default function FeaturePage() {
   }, []);
 
   const toggleStateHandler = () => {
+    console.log("Toggle State Entered");
     dispatchPageHandler({
       type: "TOGGLE_CHANGED",
     });
@@ -129,7 +128,7 @@ export default function FeaturePage() {
 
       //If Successful post
       console.log(response);
-      if (response.status===200) {
+      if (response.status === 200) {
         dispatchPageHandler({
           type: "MODAL_SELECTION",
           selection: "SAVED",
@@ -137,14 +136,13 @@ export default function FeaturePage() {
         fetchFeatureFlag();
         //If post is not successful
       } else {
-        alert("Saved Failed: "+ response.data.message);
+        alert("Saved Failed: " + response.data.message);
       }
     } catch (err) {
       fetchFeatureFlag();
       console.log(flagPage.feature.value);
-      alert("Saved Failed: "+ err.message);
+      alert("Saved Failed: " + err.message);
       console.log(`Error ${err.message}`);
-      
     }
   };
 
@@ -168,13 +166,12 @@ export default function FeaturePage() {
       ) : (
         <FeatureFlagComponent
           name={flagPage.feature.name}
-          value={flagPage.feature.value}
+          value={flagPage.toggleState}
           toggleStateHandler={toggleStateHandler}
           onSave={onSave}
           onReturn={onReturn}
         />
       )}
     </div>
-    
   );
 }
