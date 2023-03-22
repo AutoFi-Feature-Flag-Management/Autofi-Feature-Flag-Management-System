@@ -9,11 +9,13 @@ const launchDarklyFeatureFlagMarshal = require("./marshals/launchDarklyFeatureFl
 
 /**
  * Gets the feature flags from the LaunchDarkly controller and marshals the data.
- *
+ * @param {Object} parameters - The query parameters of the requested feature flags.
+ * @param {int} [parameters.limit] - The limit of feature flags to return
+ * @param {int} [parameters.offset] - The offset of feature flags list to return
  * @returns {Array} An array of marshalled feature flags.
  */
-const getFeatureFlags = async () => {
-  const data = await launchDarklyController.getFeatureFlags();
+const getFeatureFlags = async (parameters) => {
+  const data = await launchDarklyController.getFeatureFlags(parameters);
   const feature_flags =
     launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller(data);
   return feature_flags;

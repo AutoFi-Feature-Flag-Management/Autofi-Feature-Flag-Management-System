@@ -15,11 +15,11 @@ const business = require("../businessLayer/business");
  */
 const getFeatureFlags = async (req, res) => {
   try {
-    res.send(await business.getFeatureFlags());
+    res.send(await business.getFeatureFlags(req.query));
   } catch (e) {
     console.log(e.message);
     res.status(400);
-    res.send("Feature Flag API Error: " + e.message);
+    res.send(e.message);
   }
 };
 
@@ -37,7 +37,7 @@ const getFeatureFlag = async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(400);
-    res.send("Feature Flag API Error: " + e.message);
+    res.send(e.message);
   }
 };
 
@@ -55,7 +55,7 @@ const changeFlag = async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(400);
-    res.send("Feature Flag API Error: " + e.message);
+    res.send(e.message);
   }
 };
 
