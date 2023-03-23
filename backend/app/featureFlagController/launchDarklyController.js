@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const axios = require("axios");
 const dotenv = require("dotenv");
 dotenv.config();
 ld_key = process.env.LD_API_KEY;
@@ -24,33 +24,26 @@ async function getFeatureFlags(parameters) {
   }
   let resp;
   if (limit == -1) {
-    resp = await fetch(
+    resp = await axios.get(
       `https://app.launchdarkly.com/api/v2/flags/${projectKey}?offset=${offset}`,
       {
-        method: "GET",
         headers: {
           Authorization: ld_key,
         },
       }
     );
   } else {
-    resp = await fetch(
+    resp = await axios.get(
       `https://app.launchdarkly.com/api/v2/flags/${projectKey}?limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
         headers: {
           Authorization: ld_key,
         },
       }
     );
   }
-
-  const data = await resp.json();
-  console.log(resp.status);
-  if (resp.status !== 200) {
-    console.log("API ERROR" + data.message);
-    throw new Error("Feature Flag API Error: " + data.message);
-  }
+  console.log("GET FLAGS REQUEST STATUS: " + resp.status);
+  const data = await resp.data;
   return data;
 }
 
@@ -68,22 +61,16 @@ async function getFeatureFlag(parameters) {
   const projectKey = "default";
   const featureFlagKey = parameters.key;
 
-  const resp = await fetch(
+  resp = await axios.get(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${featureFlagKey}`,
     {
-      method: "GET",
       headers: {
         Authorization: ld_key,
       },
     }
   );
-
-  const data = await resp.json();
-  console.log(resp.status);
-  if (resp.status !== 200) {
-    console.log("API ERROR" + data.message);
-    throw new Error("Feature Flag API Error: " + data.message);
-  }
+  console.log("GET SINGLE FLAG REQUEST STATUS: " + resp.status);
+  const data = await resp.data;
   return data;
 }
 
@@ -100,32 +87,27 @@ async function changeFlag(parameters) {
   const featureFlagKey = parameters.key;
   const featureFlagValue = parameters.value;
 
-  const resp = await fetch(
+  const resp = await axios.patch(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${featureFlagKey}`,
     {
-      method: "PATCH",
+      patch: [
+        {
+          op: "replace",
+          path: "/environments/production/on",
+          value: featureFlagValue,
+        },
+      ],
+    },
+    {
       headers: {
         "Content-Type": "application/json",
         Authorization: ld_key,
       },
-      body: JSON.stringify({
-        patch: [
-          {
-            op: "replace",
-            path: "/environments/production/on",
-            value: featureFlagValue,
-          },
-        ],
-      }),
     }
   );
 
-  const data = await resp.json();
-  console.log(resp.status);
-  if (resp.status !== 200) {
-    console.log("API ERROR" + data.message);
-    throw new Error("Feature Flag API Error: " + data.message);
-  }
+  console.log("PATCH FLAG REQUEST STATUS: " + resp.status);
+  const data = await resp.data;
   return data;
 }
 
