@@ -3,7 +3,7 @@
  * @module featureFlagRouter
  */
 const express = require("express");
-const clientController = require("../clientContoller/clientController");
+const clientController = require("../clientController/clientController");
 const router = express.Router();
 
 /**
