@@ -59,8 +59,26 @@ const changeFlag = async (req, res) => {
   }
 };
 
+/**
+ * @function getNumberOfFlags
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @param {function} next - Express next middleware function
+ * @description - Calls the getNumberOfFlags function of the business layer and sends the response.
+ */
+const getNumberOfFlags = async (req, res) => {
+  try {
+    res.send(await business.getNumberOfFlags());
+  } catch (e) {
+    console.log(e.message);
+    res.status(400);
+    res.send(e.message);
+  }
+};
+
 module.exports = {
   getFeatureFlags,
   getFeatureFlag,
   changeFlag,
+  getNumberOfFlags,
 };

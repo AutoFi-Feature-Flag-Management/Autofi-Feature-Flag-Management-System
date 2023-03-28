@@ -26,7 +26,7 @@ describe("getFeatureFlag", () => {
 });
 
 describe("changeFlag", () => {
-  it("should call business.changeFlag with the correct params", async () => {
+  it("should call business.changeFlag with the correct body", async () => {
     const req = { body: { key: "test" } };
     const res = { send: jest.fn() };
     const next = jest.fn();
