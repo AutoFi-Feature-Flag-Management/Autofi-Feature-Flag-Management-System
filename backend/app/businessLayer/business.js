@@ -48,8 +48,21 @@ const changeFlag = async (parameters) => {
   }
 };
 
+/**
+ * Gets the number of feature flags from the LaunchDarkly controller, mashals the data then returns the length.
+ * @returns {String} The number of feature flags.
+ */
+const getNumberOfFlags = async () => {
+  const data = await launchDarklyController.getFeatureFlags({});
+  const feature_flags =
+    launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller(data);
+  //Express required sent data to be in string format
+  return feature_flags.length.toString();
+};
+
 module.exports = {
   getFeatureFlags,
   getFeatureFlag,
   changeFlag,
+  getNumberOfFlags,
 };

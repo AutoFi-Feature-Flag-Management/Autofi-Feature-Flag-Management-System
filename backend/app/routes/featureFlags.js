@@ -1,7 +1,6 @@
 /**
  * Express Router for handling Feature Flag requests
  */
-
 const express = require("express");
 const clientController = require("../clientController/clientController");
 const router = express.Router();
