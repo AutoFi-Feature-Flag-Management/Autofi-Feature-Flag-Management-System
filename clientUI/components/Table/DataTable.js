@@ -1,9 +1,11 @@
 import * as React from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import classes from "../../styles/DataTable.module.css";
 import Button from "../UI/button";
 import Link from "next/link";
+import api from "../../pages/api/axios";
+
 /*
  * @file InitialFilters.js
  * @author [Isaiah]
@@ -15,27 +17,63 @@ import Link from "next/link";
  */
 
 export default function DataTable(props) {
+  const pageSize = 1;
+
+  const [pageState, setPageState] = useState({
+    isLoading: false,
+    data: [],
+    page: 1,
+    pageSize: pageSize,
+    filterActive: false,
+  });
+
   // Define an array to store the rows data
   let rows = [];
   let id = 0;
-  console.log(props.data);
+
+  useEffect(() => {
+    console.log("use effect entered");
+    const fetchData = async () => {
+      setPageState((old) => ({ ...old, isLoading: true }));
+      const response = await fetch(
+        `http://localhost:3001/featureflags?limit=${pageSize}&offset=${
+          pageState.page - 1
+        }`
+      );
+      const json = await response.json();
+      setPageState((old) => ({
+        ...old,
+        isLoading: false,
+        data: json,
+      }));
+    };
+    if (pageState.filterActive === false) {
+      console.log("data fetched");
+      fetchData();
+    } else {
+      console.log("filterOn Rendering Filter Page Change");
+      console.log(pageState.data);
+    }
+  }, [pageState.page, pageState.pageSize, pageState.filterActive]);
+
   // Use the useMemo hook to transform the props.data into the required format
   useMemo(() => {
-    props.data.map((feature) => {
-      rows.push({
-        id: +id, // Convert the key to a number
-        key: feature.key,
-        name: feature.name,
-        date: feature.lastUpdatedDate,
-        description: feature.description,
-        value: feature.value ? "On" : "Off",
-        buttonVal: +feature.key, // Convert the key to a number
+    if (pageState.data.length !== 0) {
+      console.log(pageState.data);
+      pageState.data.map((feature) => {
+        rows.push({
+          id: +id, // Convert the key to a number
+          key: feature.key,
+          name: feature.name,
+          date: feature.lastUpdatedDate,
+          description: feature.description,
+          value: feature.value ? "On" : "Off",
+          buttonVal: +feature.key, // Convert the key to a number
+        });
+        id++;
       });
-      id++;
-    });
-  }, [props.data]);
-  {
-  }
+    }
+  }, [pageState.data]);
 
   // Define the data for the grid
   const data = {
@@ -93,15 +131,58 @@ export default function DataTable(props) {
 
   // Return the DataGrid component, with the given data and style
   return (
-    <div style={{ height: 400, width: "90%", margin: "auto" }}>
+    <div style={{ width: "90%", margin: "auto" }}>
       <DataGrid
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        {...data}
         components={{
           Toolbar: GridToolbar,
+        }}
+        autoHeight
+        {...data}
+        pagination
+        rowCount={pageState.filterActive ? 1 : 3}
+        // rowsPerPageOptions={[10, 30, 50, 70, 100]}
+        paginationMode="server"
+        loading={pageState.isLoading}
+        page={pageState.page - 1}
+        pageSize={pageState.pageSize}
+        onPageChange={(newPage) => {
+          setPageState((old) => ({ ...old, page: newPage + 1 }));
+        }}
+        onFilterModelChange={(filter) => {
+          const fetchData = async () => {
+            setPageState((old) => ({ ...old, isLoading: true }));
+            const response = await fetch(`http://localhost:3001/featureflags`);
+            const json = await response.json();
+            setPageState((old) => ({
+              ...old,
+              isLoading: false,
+              data: json,
+            }));
+          };
+          if (
+            (filter.items.length === 1) &
+            (filter.items[0].value !== undefined)
+          ) {
+            fetchData();
+            setPageState((old) => ({ ...old, filterActive: true }));
+          } else {
+            setPageState((old) => ({ ...old, filterActive: false }));
+          }
         }}
       />
     </div>
   );
 }
+
+// rowCount={pageState.total}
+// loading={pageState.isLoading}
+// rowsPerPageOptions={[10, 30, 50, 70, 100]}
+// pagination
+// page={pageState.page - 1}
+// pageSize={pageState.pageSize}
+// paginationMode="server"
+// onPageChange={(newPage) => {
+//   setPageState(old => ({ ...old, page: newPage + 1 }))
+// }}
+// onPageSizeChange={(newPageSize) => setPageState(old => ({ ...old, pageSize: newPageSize }))}
+// columns={columns}
