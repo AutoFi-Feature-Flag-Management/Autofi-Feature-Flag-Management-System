@@ -35,3 +35,14 @@ describe("changeFlag", () => {
     expect(business.changeFlag).toHaveBeenCalledWith(req.body);
   });
 });
+
+describe("getNumberOfFlags", () => {
+  it("should call business.getNumberOfFlags once", async () => {
+    const req = { query: { project: "test" } };
+    const res = { send: jest.fn() };
+    const next = jest.fn();
+    business.getNumberOfFlags.mockResolvedValueOnce({ test: "test" });
+    await clientController.getNumberOfFlags(req, res, next);
+    expect(business.getNumberOfFlags).toHaveBeenCalledTimes(1);
+  });
+});
