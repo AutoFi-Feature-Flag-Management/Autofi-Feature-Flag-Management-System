@@ -53,7 +53,6 @@ describe("changeFlag", () => {
     expect(business.changeFlag).toHaveBeenCalledWith(req.body);
   });
 });
-
 /**
  * Tests the "getNumberOfFlags" function of the "clientController".
  */
