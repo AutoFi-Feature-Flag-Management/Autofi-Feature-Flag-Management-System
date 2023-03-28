@@ -55,7 +55,7 @@ const changeFlag = async (parameters) => {
 const getNumberOfFlags = async () => {
   const data = await launchDarklyController.getFeatureFlags({});
   const feature_flags =
-    launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller(data);
+    await launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller(data);
   //Express required sent data to be in string format
   return feature_flags.length.toString();
 };

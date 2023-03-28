@@ -71,4 +71,44 @@ describe("changeFlag", () => {
     await business.changeFlag(parameters);
     expect(launchDarklyController.changeFlag).toHaveBeenCalledWith(parameters);
   });
+  it("should throw error in launchDarklyController.changeFlag for not being a boolean", async () => {
+    const parameters = { key: "test", value: "hello" };
+    await expect(business.changeFlag(parameters)).rejects.toThrow(
+      "value must be a boolean"
+    );
+  });
+});
+
+describe("getNumberOfFlags", () => {
+  it("should call launchDarklyController.getNumberOfFlags once", async () => {
+    launchDarklyController.getFeatureFlags.mockResolvedValueOnce([
+      {
+        key: "test1",
+        name: "Test1",
+        value: false,
+        lastUpdatedDate: "2023-03-23T20:25:34.947Z",
+        description: "This is a test",
+      },
+    ]);
+    launchDarklyFeatureFlagMarshal.launchDarklyFlagMarshaller.mockResolvedValueOnce(
+      [
+        {
+          key: "test1",
+          name: "Test1",
+          value: false,
+          lastUpdatedDate: "2023-03-23T20:25:34.947Z",
+          description: "This is a test",
+        },
+        {
+          key: "test1",
+          name: "Test1",
+          value: false,
+          lastUpdatedDate: "2023-03-23T20:25:34.947Z",
+          description: "This is a test",
+        },
+      ]
+    );
+    const numberOfFlags = await business.getNumberOfFlags();
+    expect(numberOfFlags).toBe("2");
+  });
 });
