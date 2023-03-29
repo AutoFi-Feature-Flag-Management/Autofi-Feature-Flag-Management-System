@@ -3,7 +3,13 @@ const business = require("../businessLayer/business");
 
 jest.mock("../businessLayer/business");
 
+/**
+ * Tests the "getFeatureFlags" function of the "clientController".
+ */
 describe("getFeatureFlags", () => {
+  /**
+   * It tests whether the "business.getFeatureFlags" function is called with the correct parameters.
+   */
   it("should call business.getFeatureFlags with the correct params", async () => {
     const req = { query: { project: "test" } };
     const res = { send: jest.fn() };
@@ -14,7 +20,13 @@ describe("getFeatureFlags", () => {
   });
 });
 
+/**
+ * Tests the "getFeatureFlag" function of the "clientController".
+ */
 describe("getFeatureFlag", () => {
+  /**
+   * It tests whether the "business.getFeatureFlag" function is called with the correct parameters.
+   */
   it("should call business.getFeatureFlag with the correct params", async () => {
     const req = { params: { key: "test" } };
     const res = { send: jest.fn() };
@@ -25,7 +37,13 @@ describe("getFeatureFlag", () => {
   });
 });
 
+/**
+ * Tests the "changeFlag" function of the "clientController".
+ */
 describe("changeFlag", () => {
+  /**
+   * It tests whether the "business.changeFlag" function is called with the correct parameters.
+   */
   it("should call business.changeFlag with the correct body", async () => {
     const req = { body: { key: "test" } };
     const res = { send: jest.fn() };
@@ -35,8 +53,13 @@ describe("changeFlag", () => {
     expect(business.changeFlag).toHaveBeenCalledWith(req.body);
   });
 });
-
+/**
+ * Tests the "getNumberOfFlags" function of the "clientController".
+ */
 describe("getNumberOfFlags", () => {
+  /**
+   * It tests whether the "business.getNumberOfFlags" function is called once.
+   */
   it("should call business.getNumberOfFlags once", async () => {
     const req = { query: { project: "test" } };
     const res = { send: jest.fn() };

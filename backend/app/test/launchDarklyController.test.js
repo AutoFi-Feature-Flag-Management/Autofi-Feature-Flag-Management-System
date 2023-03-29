@@ -2,7 +2,14 @@ const launchDarklyController = require("../featureFlagController/launchDarklyCon
 const axios = require("axios");
 
 jest.mock("axios");
+/**
+ * Tests the "launchDarklyController".
+ */
 describe("launchDarklyController", () => {
+  /**
+   * Tests the retrieval of all feature flags.
+   * @async
+   */
   it("getting all feature flags", async () => {
     axios.get.mockResolvedValue({
       status: 200,
@@ -58,6 +65,10 @@ describe("launchDarklyController", () => {
     expect(axios.get).toHaveBeenCalledTimes(1);
   });
 
+  /**
+   * Tests the retrieval of a single feature flag.
+   * @async
+   */
   it("getting single feature flag", async () => {
     axios.get.mockResolvedValue({
       status: 200,
@@ -85,6 +96,10 @@ describe("launchDarklyController", () => {
     expect(axios.get).toHaveBeenCalledTimes(2);
   });
 
+  /**
+   * Tests the retrieval of all feature flags with a limit of 1.
+   * @async
+   */
   it("getting all feature flags with limit of 1", async () => {
     axios.get.mockResolvedValue({
       status: 200,
@@ -112,7 +127,11 @@ describe("launchDarklyController", () => {
     expect(axios.get).toHaveBeenCalledTimes(3);
   });
 
-  it("getting all feature flags with offset and limit", async () => {
+  /**
+   * Tests getting all feature flags with offset and limit
+   * @async
+   */
+  it("getting all feature flags with offset of 1 and limit of 2", async () => {
     axios.get.mockResolvedValue({
       status: 200,
       data: [
@@ -156,6 +175,10 @@ describe("launchDarklyController", () => {
     expect(axios.get).toHaveBeenCalledTimes(4);
   });
 
+  /**
+   * Tests getting a single feature flag with a key
+   * @async
+   */
   it("getting single feature flag", async () => {
     axios.get.mockResolvedValue({
       status: 200,
@@ -183,6 +206,10 @@ describe("launchDarklyController", () => {
     expect(axios.get).toHaveBeenCalledTimes(5);
   });
 
+  /**
+   * Tests updating the on/off status of a feature flag.
+   * @async
+   */
   it("patching feature flag", async () => {
     axios.patch.mockResolvedValue({
       status: 200,
