@@ -17,7 +17,7 @@ import api from "../../pages/api/axios";
  */
 
 export default function DataTable(props) {
-  const pageSize = 1;
+  const pageSize = 5;
 
   const [pageState, setPageState] = useState({
     isLoading: false,
@@ -37,7 +37,7 @@ export default function DataTable(props) {
       setPageState((old) => ({ ...old, isLoading: true }));
       const response = await fetch(
         `http://localhost:3001/featureflags?limit=${pageSize}&offset=${
-          pageState.page - 1
+          (pageState.page - 1) * pageSize
         }`
       );
       const json = await response.json();
@@ -139,8 +139,8 @@ export default function DataTable(props) {
         autoHeight
         {...data}
         pagination
-        rowCount={pageState.filterActive ? 1 : 3}
-        // rowsPerPageOptions={[10, 30, 50, 70, 100]}
+        rowCount={pageState.filterActive ? 1 : 10}
+        rowsPerPageOptions={[10, 30, 50, 70, 100]}
         paginationMode="server"
         loading={pageState.isLoading}
         page={pageState.page - 1}
