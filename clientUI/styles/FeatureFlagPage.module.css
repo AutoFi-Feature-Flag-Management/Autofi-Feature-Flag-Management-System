@@ -10,6 +10,13 @@
     font-size: 50px;
 }
 
+.description {
+    text-align: center;
+    font-size: 20px;
+    padding:1.5rem;
+    color: #07284d;
+}
+
 .img {
     max-width: 100px;;
     height: 100%;
@@ -25,5 +32,5 @@
 .toggle {
     justify-content: center;
     display:flex;
-    padding: 2rem;
+    padding: 1rem;
 }

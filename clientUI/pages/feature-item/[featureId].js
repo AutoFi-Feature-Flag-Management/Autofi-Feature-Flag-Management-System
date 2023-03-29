@@ -170,6 +170,7 @@ export default function FeaturePage() {
           toggleStateHandler={toggleStateHandler}
           onSave={onSave}
           onReturn={onReturn}
+          description = {flagPage.feature.description}
         />
       )}
     </div>
