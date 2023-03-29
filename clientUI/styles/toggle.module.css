@@ -17,14 +17,29 @@
   background-color: #fff;
 }
 
+.toggle:hover {
+  cursor: pointer;
+}
+
 .toggleContainerTrue {
   transition: 0.5s;
   background-color: #00c853;
 }
+.toggleContainerTrue:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .toggleContainerFalse {
   transition: 0.5s;
   background: rgb(218, 22, 22);
 }
+
+.toggleContainerFalse:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .stateTrue {
   transition: 0.7s;
   transform: translate(30px);
