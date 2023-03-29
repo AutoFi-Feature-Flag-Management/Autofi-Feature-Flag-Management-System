@@ -1,10 +1,10 @@
-const business = require("../businessLayer/business");
-const launchDarklyFeatureFlagMarshal = require("../businessLayer/marshals/launchDarklyFeatureFlagMarshal");
-const launchDarklyController = require("../featureFlagController/launchDarklyController");
+const business = require("../app/businessLayer/business");
+const launchDarklyFeatureFlagMarshal = require("../app/businessLayer/marshals/launchDarklyFeatureFlagMarshal");
+const launchDarklyController = require("../app/featureFlagController/launchDarklyController");
 
 // Mock the dependencies
-jest.mock("../featureFlagController/launchDarklyController");
-jest.mock("../businessLayer/marshals/launchDarklyFeatureFlagMarshal");
+jest.mock("../app/featureFlagController/launchDarklyController");
+jest.mock("../app/businessLayer/marshals/launchDarklyFeatureFlagMarshal");
 
 /**
  * Test suite for the business.getFeatureFlags method

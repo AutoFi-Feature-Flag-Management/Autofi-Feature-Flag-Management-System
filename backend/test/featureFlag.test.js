@@ -2,7 +2,7 @@
  * @fileOverview Unit tests for the FeatureFlag class.
  */
 
-const FeatureFlag = require("../../../shared/model/featureFlag.js");
+const FeatureFlag = require("../../shared/model/featureFlag.js");
 
 /**
  * Tests for the FeatureFlag class.

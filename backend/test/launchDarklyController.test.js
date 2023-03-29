@@ -1,4 +1,4 @@
-const launchDarklyController = require("../featureFlagController/launchDarklyController");
+const launchDarklyController = require("../app/featureFlagController/launchDarklyController");
 const axios = require("axios");
 
 jest.mock("axios");
