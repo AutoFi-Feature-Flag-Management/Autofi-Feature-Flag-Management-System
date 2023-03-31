@@ -1,7 +1,7 @@
-const clientController = require("../clientController/clientController");
-const business = require("../businessLayer/business");
+const clientController = require("../app/clientController/clientController");
+const business = require("../app/businessLayer/business");
 
-jest.mock("../businessLayer/business");
+jest.mock("../app/businessLayer/business");
 
 /**
  * Tests the "getFeatureFlags" function of the "clientController".

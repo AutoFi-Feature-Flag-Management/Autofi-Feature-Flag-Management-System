@@ -1,7 +1,7 @@
 const {
   launchDarklyFlagMarshaller,
-} = require("../businessLayer/marshals/launchDarklyFeatureFlagMarshal");
-const FeatureFlag = require("../../../shared/model/featureFlag");
+} = require("../app/businessLayer/marshals/launchDarklyFeatureFlagMarshal");
+const FeatureFlag = require("../../shared/model/featureFlag");
 
 /**
  * Tests the launchDarklyFlagMarshaller function.
