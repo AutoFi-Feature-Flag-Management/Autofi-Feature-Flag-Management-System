@@ -78,7 +78,7 @@ export default function DataTable(props) {
   // Define the data for the grid
   const data = {
     columns: [
-      { field: "id" },
+      // { field: "id" },
       {
         field: "name",
         headerName: "Feature",
@@ -160,8 +160,8 @@ export default function DataTable(props) {
             }));
           };
           if (
-            (filter.items.length === 1) &
-            (filter.items[0].value !== undefined)
+            (filter.items[0].value !== undefined) &
+            (filter.items.length === 1)
           ) {
             fetchData();
             setPageState((old) => ({ ...old, filterActive: true }));
