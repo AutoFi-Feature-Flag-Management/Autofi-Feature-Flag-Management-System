@@ -21,7 +21,7 @@ export default function DataTable(props) {
     isLoading: false,
     data: [],
     page: 1,
-    pageSize: 10,
+    pageSize: props.pageSize,
     filterActive: false,
   });
 
