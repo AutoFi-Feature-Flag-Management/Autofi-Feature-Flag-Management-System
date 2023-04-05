@@ -2,7 +2,6 @@ import * as React from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useMemo, useState, useEffect } from "react";
 import classes from "../../styles/DataTable.module.css";
-import Button from "../UI/button";
 import Link from "next/link";
 import api from "../../pages/api/axios";
 
@@ -15,40 +14,74 @@ import api from "../../pages/api/axios";
  * @returns {React.Element} A React component that displays a data grid.
  * Testing a new merge
  */
+let timer = undefined;
 
 export default function DataTable(props) {
-  const pageSize = 5;
-
   const [pageState, setPageState] = useState({
     isLoading: false,
     data: [],
     page: 1,
-    pageSize: pageSize,
+    pageSize: 10,
     filterActive: false,
   });
+
+  const rowsPerPageHandler = (event) => {
+    if (timer !== undefined) {
+      clearTimeout(timer);
+      timer = undefined;
+    }
+    timer = setTimeout(() => {
+      if ((event.target.value !== undefined) | (event.target.value !== "")) {
+        timer = undefined;
+        setPageState((old) => ({ ...old, pageSize: event.target.value }));
+      }
+    }, 500);
+  };
 
   // Define an array to store the rows data
   let rows = [];
   let id = 0;
-
   useEffect(() => {
-    console.log("use effect entered");
     const fetchData = async () => {
       setPageState((old) => ({ ...old, isLoading: true }));
-      const response = await fetch(
-        `http://localhost:3001/featureflags?limit=${pageSize}&offset=${
-          (pageState.page - 1) * pageSize
-        }`
-      );
-      const json = await response.json();
-      setPageState((old) => ({
-        ...old,
-        isLoading: false,
-        data: json,
-      }));
+      try {
+        const response = await api.get(
+          `http://localhost:3001/featureflags?limit=${
+            pageState.pageSize
+          }&offset=${(pageState.page - 1) * pageState.pageSize}`
+        );
+        const json = response.data;
+        setPageState((old) => ({
+          ...old,
+          isLoading: false,
+          data: json,
+        }));
+        timer = undefined;
+      } catch (err) {
+        if (timer !== undefined) {
+          clearTimeout(timer);
+          timer = undefined;
+          alert(
+            "Unable to reload... manually continue switching page to force reload or refresh"
+          );
+        } else {
+          if (pageState.page !== 1) {
+            alert(
+              "Crash on page switch, attempting to reload on previous page "
+            );
+            timer = setTimeout(() => {
+              setPageState((old) => ({ ...old, page: old.page - 1 }));
+            }, 2000);
+          } else {
+            alert(
+              "Error pulling table please refresh or check server. Err Message" +
+                err
+            );
+          }
+        }
+      }
     };
     if (pageState.filterActive === false) {
-      console.log("data fetched");
       fetchData();
     } else {
       console.log("filterOn Rendering Filter Page Change");
@@ -131,58 +164,59 @@ export default function DataTable(props) {
 
   // Return the DataGrid component, with the given data and style
   return (
-    <div style={{ width: "90%", margin: "auto" }}>
-      <DataGrid
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        autoHeight
-        {...data}
-        pagination
-        rowCount={pageState.filterActive ? 1 : 10}
-        rowsPerPageOptions={[10, 30, 50, 70, 100]}
-        paginationMode="server"
-        loading={pageState.isLoading}
-        page={pageState.page - 1}
-        pageSize={pageState.pageSize}
-        onPageChange={(newPage) => {
-          setPageState((old) => ({ ...old, page: newPage + 1 }));
-        }}
-        onFilterModelChange={(filter) => {
-          const fetchData = async () => {
-            setPageState((old) => ({ ...old, isLoading: true }));
-            const response = await fetch(`http://localhost:3001/featureflags`);
-            const json = await response.json();
-            setPageState((old) => ({
-              ...old,
-              isLoading: false,
-              data: json,
-            }));
-          };
-          if (
-            (filter.items[0].value !== undefined) &
-            (filter.items.length === 1)
-          ) {
-            fetchData();
-            setPageState((old) => ({ ...old, filterActive: true }));
-          } else {
-            setPageState((old) => ({ ...old, filterActive: false }));
-          }
-        }}
-      />
+    <div className={classes.tableContainer}>
+      <div style={{ width: "90%", margin: "auto" }}>
+        <DataGrid
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          autoHeight
+          {...data}
+          pagination
+          rowCount={pageState.filterActive ? 1 : +props.numberFeatures}
+          paginationMode="server"
+          loading={pageState.isLoading}
+          page={pageState.page - 1}
+          pageSize={+pageState.pageSize}
+          onPageChange={(newPage) => {
+            setPageState((old) => ({ ...old, page: newPage + 1 }));
+          }}
+          onFilterModelChange={(filter) => {
+            const fetchData = async () => {
+              setPageState((old) => ({ ...old, isLoading: true }));
+              try {
+                const response = await api.get(
+                  `http://localhost:3001/featureflags`
+                );
+                const json = response.data;
+                setPageState((old) => ({
+                  ...old,
+                  isLoading: false,
+                  data: json,
+                }));
+              } catch (err) {
+                console.log(err);
+                alert("Error applying filter please remove and try again!");
+              }
+            };
+            if (
+              (filter.items[0].value !== undefined) &
+              (filter.items.length === 1)
+            ) {
+              fetchData();
+              setPageState((old) => ({ ...old, filterActive: true }));
+            } else {
+              setPageState((old) => ({ ...old, filterActive: false }));
+            }
+          }}
+        />
+      </div>
+      <div className={classes.rowCountSelectorContainer}>
+        <div className={classes.rowCountLabel}>Rows Per Page:</div>
+        <div className={classes.rowSelector}>
+          <input type="number" min="1" onChange={rowsPerPageHandler}></input>
+        </div>
+      </div>
     </div>
   );
 }
-
-// rowCount={pageState.total}
-// loading={pageState.isLoading}
-// rowsPerPageOptions={[10, 30, 50, 70, 100]}
-// pagination
-// page={pageState.page - 1}
-// pageSize={pageState.pageSize}
-// paginationMode="server"
-// onPageChange={(newPage) => {
-//   setPageState(old => ({ ...old, page: newPage + 1 }))
-// }}
-// onPageSizeChange={(newPageSize) => setPageState(old => ({ ...old, pageSize: newPageSize }))}
-// columns={columns}

@@ -15,3 +15,24 @@
   color: blue;
   text-decoration: underline;
 }
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.rowCountSelectorContainer {
+  position: relative;
+  align-self: center;
+  top: -2.2rem;
+  display: flex;
+}
+.rowCountLabel {
+  font-size: 0.9rem;
+  padding: 2px 0;
+}
+
+.rowSelector input {
+  width: 3rem;
+  margin: 0 1rem;
+}
