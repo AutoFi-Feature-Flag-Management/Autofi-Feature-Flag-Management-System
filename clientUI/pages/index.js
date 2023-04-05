@@ -3,11 +3,9 @@ import handler from "./api/fetchHandler";
 
 import DataTable from "../components/Table/DataTable";
 function HomePage(props) {
-  let featureData = props.data.status && props.data.data;
-
   return (
     <React.Fragment>
-      <DataTable data={props.data.data} />
+      <DataTable pageSize={10} numberFeatures={props.data.data} />
     </React.Fragment>
   );
 }
@@ -15,7 +13,7 @@ export default HomePage;
 
 export async function getStaticProps() {
   const response = await handler({
-    url: "http://localhost:3001/featureflags",
+    url: "http://localhost:3001/numberofflags",
     method: "GET",
   });
   if (response.status) {
@@ -26,7 +24,7 @@ export async function getStaticProps() {
       revalidate: 1,
     };
   } else {
-    console.log(response.statusText);
+    alert("Fetch Number Of Flags Failed: " + response.statusText);
     return {
       props: {
         data: response,
