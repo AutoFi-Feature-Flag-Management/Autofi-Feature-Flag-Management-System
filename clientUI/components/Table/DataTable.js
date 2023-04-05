@@ -31,58 +31,80 @@ export default function DataTable(props) {
       timer = undefined;
     }
     timer = setTimeout(() => {
-      if ((event.target.value !== undefined) | (event.target.value !== "")) {
+      if (
+        (event.target.value !== undefined) &
+        (event.target.value !== "") &
+        (+event.target.value !== 0)
+      ) {
         timer = undefined;
-        setPageState((old) => ({ ...old, pageSize: event.target.value }));
+        setPageState((old) => ({
+          ...old,
+          pageSize: event.target.value,
+        }));
       }
     }, 500);
+  };
+
+  const fetchPageData = async () => {
+    setPageState((old) => ({ ...old, isLoading: true }));
+    try {
+      const response = await api.get(
+        `http://localhost:3001/featureflags?limit=${
+          pageState.pageSize
+        }&offset=${(pageState.page - 1) * pageState.pageSize}`
+      );
+      const json = response.data;
+      setPageState((old) => ({
+        ...old,
+        isLoading: false,
+        data: json,
+      }));
+      timer = undefined;
+    } catch (err) {
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        timer = undefined;
+        alert(
+          "Unable to reload... manually continue switching page to force reload or refresh"
+        );
+      } else {
+        if (pageState.page !== 1) {
+          alert("Crash on page switch, attempting to reload on previous page ");
+          timer = setTimeout(() => {
+            setPageState((old) => ({ ...old, page: old.page - 1 }));
+          }, 2000);
+        } else {
+          alert(
+            "Error pulling table please refresh or check server. Err Message" +
+              err
+          );
+        }
+      }
+    }
+  };
+
+  const fetchFilterData = async () => {
+    setPageState((old) => ({ ...old, isLoading: true }));
+    try {
+      const response = await api.get(`http://localhost:3001/featureflags`);
+      const json = response.data;
+      setPageState((old) => ({
+        ...old,
+        isLoading: false,
+        data: json,
+      }));
+    } catch (err) {
+      console.log(err);
+      alert("Error applying filter please remove and try again!");
+    }
   };
 
   // Define an array to store the rows data
   let rows = [];
   let id = 0;
   useEffect(() => {
-    const fetchData = async () => {
-      setPageState((old) => ({ ...old, isLoading: true }));
-      try {
-        const response = await api.get(
-          `http://localhost:3001/featureflags?limit=${
-            pageState.pageSize
-          }&offset=${(pageState.page - 1) * pageState.pageSize}`
-        );
-        const json = response.data;
-        setPageState((old) => ({
-          ...old,
-          isLoading: false,
-          data: json,
-        }));
-        timer = undefined;
-      } catch (err) {
-        if (timer !== undefined) {
-          clearTimeout(timer);
-          timer = undefined;
-          alert(
-            "Unable to reload... manually continue switching page to force reload or refresh"
-          );
-        } else {
-          if (pageState.page !== 1) {
-            alert(
-              "Crash on page switch, attempting to reload on previous page "
-            );
-            timer = setTimeout(() => {
-              setPageState((old) => ({ ...old, page: old.page - 1 }));
-            }, 2000);
-          } else {
-            alert(
-              "Error pulling table please refresh or check server. Err Message" +
-                err
-            );
-          }
-        }
-      }
-    };
     if (pageState.filterActive === false) {
-      fetchData();
+      fetchPageData();
     } else {
       console.log("filterOn Rendering Filter Page Change");
       console.log(pageState.data);
@@ -92,7 +114,6 @@ export default function DataTable(props) {
   // Use the useMemo hook to transform the props.data into the required format
   useMemo(() => {
     if (pageState.data.length !== 0) {
-      console.log(pageState.data);
       pageState.data.map((feature) => {
         rows.push({
           id: +id, // Convert the key to a number
@@ -182,31 +203,22 @@ export default function DataTable(props) {
             setPageState((old) => ({ ...old, page: newPage + 1 }));
           }}
           onFilterModelChange={(filter) => {
-            const fetchData = async () => {
-              setPageState((old) => ({ ...old, isLoading: true }));
-              try {
-                const response = await api.get(
-                  `http://localhost:3001/featureflags`
-                );
-                const json = response.data;
-                setPageState((old) => ({
-                  ...old,
-                  isLoading: false,
-                  data: json,
-                }));
-              } catch (err) {
-                console.log(err);
-                alert("Error applying filter please remove and try again!");
-              }
-            };
+            console.log(filter);
             if (
-              (filter.items[0].value !== undefined) &
-              (filter.items.length === 1)
+              filter.items.length !== 0 &&
+              filter.items[0].value !== undefined &&
+              filter.items[0].value !== ""
             ) {
-              fetchData();
+              console.log("setting filter active");
+              fetchFilterData();
               setPageState((old) => ({ ...old, filterActive: true }));
             } else {
-              setPageState((old) => ({ ...old, filterActive: false }));
+              console.log("setting filter inactive");
+              setPageState((old) => ({
+                ...old,
+                filterActive: false,
+              }));
+              fetchPageData();
             }
           }}
         />
