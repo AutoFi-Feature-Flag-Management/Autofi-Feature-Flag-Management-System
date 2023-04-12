@@ -21,7 +21,7 @@ export default function DataTable(props) {
     isLoading: false,
     data: [],
     page: 1,
-    pageSize: props.pageSize,
+    pageSize: +props.pageSize,
     filterActive: false,
   });
 
@@ -34,7 +34,7 @@ export default function DataTable(props) {
       if (
         (event.target.value !== undefined) &
         (event.target.value !== "") &
-        (+event.target.value !== 0)
+        (+event.target.value > 0)
       ) {
         timer = undefined;
         setPageState((old) => ({
@@ -168,7 +168,7 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
-          // console.log(params.row.key);
+          localStorage.setItem("rowCount", +pageState.pageSize);
           return (
             <Link
               className={classes.link}
@@ -232,16 +232,3 @@ export default function DataTable(props) {
     </div>
   );
 }
-
-// rowCount={pageState.total}
-// loading={pageState.isLoading}
-// rowsPerPageOptions={[10, 30, 50, 70, 100]}
-// pagination
-// page={pageState.page - 1}
-// pageSize={pageState.pageSize}
-// paginationMode="server"
-// onPageChange={(newPage) => {
-//   setPageState(old => ({ ...old, page: newPage + 1 }))
-// }}
-// onPageSizeChange={(newPageSize) => setPageState(old => ({ ...old, pageSize: newPageSize }))}
-// columns={columns}

@@ -1,11 +1,18 @@
 import React, { useMemo } from "react";
 import handler from "./api/fetchHandler";
-
 import DataTable from "../components/Table/DataTable";
+
 function HomePage(props) {
+  let rows = null;
+  if (typeof window !== "undefined") {
+    rows = +localStorage.getItem("rowCount");
+  } else {
+    rows = 10;
+  }
+
   return (
     <React.Fragment>
-      <DataTable pageSize={10} numberFeatures={props.data.data} />
+      <DataTable pageSize={rows} numberFeatures={props.data.data} />
     </React.Fragment>
   );
 }
@@ -24,7 +31,7 @@ export async function getStaticProps() {
       revalidate: 1,
     };
   } else {
-    alert("Fetch Number Of Flags Failed: " + response.statusText);
+    console.log("Fetch Number Of Flags Failed: " + response.statusText);
     return {
       props: {
         data: response,
