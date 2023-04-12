@@ -4,10 +4,8 @@ import DataTable from "../components/Table/DataTable";
 
 function HomePage(props) {
   let rows = 10;
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && localStorage.getItem("rowCount")) {
     rows = +localStorage.getItem("rowCount");
-  } else {
-    rows = 10;
   }
 
   return (

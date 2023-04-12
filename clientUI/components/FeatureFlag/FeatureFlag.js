@@ -1,3 +1,16 @@
+/**
+
+A React component for displaying and modifying feature flags.
+@param {object} props - The props that are passed to the component.
+@param {string} props.name - The name of the feature flag.
+@param {string} props.description - The description of the feature flag.
+@param {boolean} props.value - The current value of the feature flag.
+@param {function} props.toggleStateHandler - The function to call when the feature flag is toggled.
+@param {function} props.onSave - The function to call when the "Save" button is clicked.
+@param {function} props.onReturn - The function to call when the "Home" button is clicked.
+@returns {JSX.Element} A React component representing the feature flag.
+*/
+
 import autofiIcon from "../../public/autofi_icon.png";
 import Image from "next/Image";
 import React from "react";
