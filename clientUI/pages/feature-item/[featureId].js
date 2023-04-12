@@ -7,6 +7,14 @@ import api from "../api/axios";
 import LoadingModal from "../../components/FeatureFlag/LoadingModal";
 import Modal from "../../components/UI/Modal";
 
+/**
+@function flagPageManager
+@description Manages the state of the feature flag page.
+@param {Object} state - The current state of the feature flag page.
+@param {Object} action - The action to perform on the state.
+@returns {Object} - The updated state of the feature flag page.
+*/
+
 const flagPageManager = (state, action) => {
   console.log(action.type);
   switch (action.type) {
@@ -62,6 +70,13 @@ const flagPageManager = (state, action) => {
   }
   return { ...state, modalType: null };
 };
+
+/**
+
+@function FeaturePage
+@description A page for managing a single feature flag.
+@returns {JSX.Element} - The feature flag page component.
+*/
 
 export default function FeaturePage() {
   const router = useRouter();
