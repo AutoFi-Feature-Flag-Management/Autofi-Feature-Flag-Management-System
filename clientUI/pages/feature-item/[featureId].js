@@ -80,11 +80,23 @@ const flagPageManager = (state, action) => {
 
 export default function FeaturePage() {
   const router = useRouter();
+
+  /**
+
+Close modal function for managing the modal state
+@function closeModal
+*/
   const closeModal = () => {
     dispatchPageHandler({
       type: "MODAL_SELECTION",
     });
   };
+
+  /**
+
+Return to Home function for managing the modal state and navigating back to the home page
+@function returnToHome
+*/
   const returnToHome = () => {
     dispatchPageHandler({
       type: "MODAL_SELECTION",
@@ -100,6 +112,11 @@ export default function FeaturePage() {
     fnreturnToHome: returnToHome,
   });
 
+  /**
+
+Fetches the feature flag data from the server
+@function fetchFeatureFlag
+*/
   const fetchFeatureFlag = async () => {
     try {
       //Update path and data handling once feature flag specific api is set up
@@ -125,6 +142,11 @@ export default function FeaturePage() {
     console.log("Effect ran on start");
   }, []);
 
+      /**
+
+Handles toggle state change when clicked
+@function toggleStateHandler
+*/
   const toggleStateHandler = () => {
     console.log("Toggle State Entered");
     dispatchPageHandler({
@@ -132,6 +154,11 @@ export default function FeaturePage() {
     });
   };
 
+    /**
+
+Saves the changed feature flag status to the backend
+@function onSave
+*/
   const onSave = async () => {
     //Post object new object to server
     try {
@@ -161,6 +188,11 @@ export default function FeaturePage() {
     }
   };
 
+      /**
+
+Checks if status has been saved or updated before returning to home feature flag table
+@function onReturn
+*/
   const onReturn = () => {
     console.log(flagPage.toggleState, flagPage.feature.value);
     if (flagPage.toggleState !== flagPage.feature.value) {
@@ -173,6 +205,7 @@ export default function FeaturePage() {
     router.push("/");
   };
 
+  //Return the layout for the feature Id page
   return (
     <div>
       {flagPage.modalType}
@@ -185,7 +218,7 @@ export default function FeaturePage() {
           toggleStateHandler={toggleStateHandler}
           onSave={onSave}
           onReturn={onReturn}
-          description = {flagPage.feature.description}
+          description={flagPage.feature.description}
         />
       )}
     </div>
