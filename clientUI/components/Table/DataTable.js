@@ -21,7 +21,7 @@ export default function DataTable(props) {
     isLoading: false,
     data: [],
     page: 1,
-    pageSize: props.pageSize,
+    pageSize: +props.pageSize,
     filterActive: false,
   });
 
@@ -168,7 +168,7 @@ export default function DataTable(props) {
         flex: 1,
         // Render the cell with a button
         renderCell: (params) => {
-          // console.log(params.row.key);
+          localStorage.setItem("rowCount", +pageState.pageSize);
           return (
             <Link
               className={classes.link}
