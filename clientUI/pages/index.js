@@ -3,7 +3,7 @@ import handler from "./api/fetchHandler";
 import DataTable from "../components/Table/DataTable";
 
 function HomePage(props) {
-  let rows = null;
+  let rows = 10;
   if (typeof window !== "undefined") {
     rows = +localStorage.getItem("rowCount");
   } else {
